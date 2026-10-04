@@ -1,0 +1,251 @@
+:root {
+  /* Colours */
+  --color-bg: #faf7f0;        /* warm off-white page background */
+  --color-surface: #ffffff;   /* cards */
+  --color-text: #2b2b26;      /* near-black for body text */
+  --color-muted: #5c5c52;     /* secondary text */
+  --color-primary: #af84b9;   /* sage green: buttons, links */
+  --color-primary-dark: #420b4d;
+  --color-accent: #7a6c9c;    /* lavender: small highlights */
+  --color-border: #e2ddd0;
+
+  /* Fonts */
+  --font-heading: "DM Serif Display", Georgia, serif;
+  --font-body: "Work Sans", system-ui, sans-serif;
+
+  /* Spacing */
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2.5rem;
+  --space-5: 4rem;
+
+  --radius: 8px;
+  --max-width: 1120px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+h1, h2, h3 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+a {
+  color: var(--color-primary);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.button {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: #ffffff;
+  border-radius: var(--radius);
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.button:hover {
+  background: var(--color-primary-dark);
+}
+
+/* Layout */
+.container {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding-inline: var(--space-2);
+}
+
+.section {
+  padding-block: var(--space-4);
+}
+
+/* Header */
+.site-header {
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.header-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  padding-block: var(--space-2);
+}
+
+.logo {
+  font-family: var(--font-heading);
+  font-size: 1.5rem;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.site-nav {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.site-nav a,
+.cart-link {
+  color: var(--color-text);
+  text-decoration: none;
+  padding-block: 0.5rem;
+}
+
+.site-nav a:hover,
+.cart-link:hover {
+  color: var(--color-primary);
+}
+
+/* Placeholder for photos you don't have yet */
+.photo {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-border);
+  color: var(--color-muted);
+  border-radius: var(--radius);
+}
+
+/* Hero */
+.hero-inner {
+  display: grid;
+  gap: var(--space-3);
+  padding-block: var(--space-4);
+}
+
+.hero h1 {
+  font-size: 2.25rem;
+  margin: 0 0 var(--space-2);
+}
+
+.hero-photo {
+  min-height: 260px;
+}
+
+/* Products */
+.product-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-3);
+}
+
+.product-card a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.product-card h3 {
+  margin: var(--space-1) 0 0;
+  font-size: 1.25rem;
+}
+
+.price {
+  margin: 0;
+  color: var(--color-muted);
+}
+
+/* Story */
+.story-inner {
+  display: grid;
+  gap: var(--space-3);
+}
+
+/* Footer */
+.site-footer {
+  border-top: 1px solid var(--color-border);
+  padding-block: var(--space-3);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
+
+/* Shop page */
+.page-title {
+  font-size: 2.25rem;
+  margin: 0 0 var(--space-3);
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-bottom: var(--space-4);
+}
+
+.chip {
+  padding: 0.6rem 1.1rem;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.chip:hover {
+  border-color: var(--color-primary);
+}
+
+.chip-active {
+  color: #ffffff;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.product-grid-shop {
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-3) var(--space-2);
+}
+
+.product-grid-shop .photo {
+  min-height: 150px;
+}
+/* Wider screens */
+
+
+@media (min-width: 768px) {
+  .hero-inner {
+    grid-template-columns: 1fr 1fr;
+    align-items: center;
+  }
+
+  .hero h1 {
+    font-size: 3.25rem;
+  }
+
+  .product-grid-shop {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .story-inner {
+    grid-template-columns: 1fr 2fr;
+    align-items: center;
+  }
+}
