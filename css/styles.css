@@ -234,13 +234,17 @@ img {
   .hero-inner {
     grid-template-columns: 1fr 1fr;
     align-items: center;
+    .product-grid-shop {
+      grid-template-columns: repeat(3, 1fr);
+      
+    }
   }
 
   .hero h1 {
     font-size: 3.25rem;
   }
 
-  .product-grid-shop {
+  .product-grid {
     grid-template-columns: repeat(3, 1fr);
   }
 
