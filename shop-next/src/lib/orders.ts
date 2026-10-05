@@ -184,3 +184,12 @@ export async function getSavedShipping(userId: number): Promise<ShippingDetails 
 
   return result.rows[0] ?? null;
 }
+
+export async function countOrdersForUser(userId: number): Promise<number> {
+  const result = await pool.query<{ count: string }>(
+    "SELECT COUNT(*) AS count FROM orders WHERE user_id = $1",
+    [userId]
+  );
+
+  return Number(result.rows[0]?.count ?? 0);
+}

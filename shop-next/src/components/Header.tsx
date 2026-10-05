@@ -42,6 +42,7 @@ export default function Header({ userName }: HeaderProps) {
           {userName ? (
             <>
               <Link href="/orders" onClick={closeMenu}>My orders</Link>
+              <Link href="/account" onClick={closeMenu}>My account</Link>
               <form action={logoutAction}>
                 <button className="nav-button" type="submit">
                   Log out ({userName})
