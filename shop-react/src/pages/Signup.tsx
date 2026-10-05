@@ -1,12 +1,15 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate, useSearchParams } from "react-router";
 import FormField from "../components/FormField";
 import { useAuth } from "../context/AuthContext";
 
 function Signup() {
   const { signup } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const requested = searchParams.get("next") ?? "/";
+  const nextPage = requested.startsWith("/") && !requested.startsWith("//") ? requested : "/";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,7 +32,7 @@ function Signup() {
       setError(problem);
       return;
     }
-    navigate("/");
+    navigate(nextPage);
   }
 
   return (
@@ -58,7 +61,7 @@ function Signup() {
         </form>
 
         <p>
-          Already have an account? <Link to="/login">Sign in</Link>
+          Already have an account? <Link to={`/login?next=${encodeURIComponent(nextPage)}`}>Sign in</Link>
         </p>
       </div>
     </section>
