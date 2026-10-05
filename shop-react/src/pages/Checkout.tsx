@@ -7,9 +7,12 @@ import { useCart } from "../context/CartContext";
 interface CheckoutForm {
   name: string;
   email: string;
+  phone: string;
   address: string;
   city: string;
+  state: string;
   postcode: string;
+
 }
 
 type CheckoutErrors = Partial<Record<keyof CheckoutForm, string>>;
@@ -17,12 +20,15 @@ type CheckoutErrors = Partial<Record<keyof CheckoutForm, string>>;
 const emptyForm: CheckoutForm = {
   name: "",
   email: "",
+  phone: "",
   address: "",
   city: "",
+  state: "",
   postcode: "",
 };
 
 const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const phonePattern = /^[0-9+()\-\s]{7,}$/;
 
 function validate(form: CheckoutForm): CheckoutErrors {
   const errors: CheckoutErrors = {};
@@ -33,14 +39,21 @@ function validate(form: CheckoutForm): CheckoutErrors {
   if (!emailPattern.test(form.email.trim())) {
     errors.email = "Please enter a valid email address.";
   }
+  if (!phonePattern.test(form.phone.trim())) {
+    errors.phone = "Please enter a valid phone number.";
+  }
   if (form.address.trim() === "") {
     errors.address = "Please enter your street address.";
   }
   if (form.city.trim() === "") {
     errors.city = "Please enter your city.";
   }
-  if (form.postcode.trim() === "") {
-    errors.postcode = "Please enter your postcode.";
+
+  if (!/^[A-Za-z]{2}$/.test(form.state.trim())) {
+    errors.state = "Please enter your two-letter state, such as RI.";
+  }
+  if (!/^\d{5}(-\d{4})?$/.test(form.postcode.trim())) {
+    errors.postcode = "Please enter a valid ZIP code.";
   }
 
   return errors;
@@ -124,6 +137,14 @@ function Checkout() {
               onChange={(value) => updateField("email", value)}
             />
             <FormField
+              id="phone"
+              label="Phone"
+              type="tel"
+              value={form.phone}
+              error={errors.phone}
+              onChange={(value) => updateField("phone", value)}
+            />
+            <FormField
               id="address"
               label="Street address"
               value={form.address}
@@ -140,6 +161,27 @@ function Checkout() {
             <FormField
               id="postcode"
               label="Postcode"
+              value={form.postcode}
+              error={errors.postcode}
+              onChange={(value) => updateField("postcode", value)}
+            />
+                        <FormField
+              id="city"
+              label="City"
+              value={form.city}
+              error={errors.city}
+              onChange={(value) => updateField("city", value)}
+            />
+            <FormField
+              id="state"
+              label="State"
+              value={form.state}
+              error={errors.state}
+              onChange={(value) => updateField("state", value.toUpperCase())}
+            />
+            <FormField
+              id="postcode"
+              label="ZIP code"
               value={form.postcode}
               error={errors.postcode}
               onChange={(value) => updateField("postcode", value)}
