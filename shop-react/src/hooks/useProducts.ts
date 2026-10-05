@@ -12,7 +12,7 @@ export function useProducts() {
 
     async function loadProducts() {
       try {
-        const response = await fetch("/data/products.json");
+        const response = await fetch("/api/products");
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }

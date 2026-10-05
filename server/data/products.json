@@ -1,0 +1,13 @@
+[
+  { "id": "lavender-oat-soap", "name": "Lavender Oat Soap", "category": "Soaps", "price": 8, "size": "4.5 oz bar", "scents": ["Lavender"], "description": "Gentle exfoliating bar with ground oats.", "stock": 24 },
+  { "id": "citrus-mint-soap", "name": "Citrus Mint Soap", "category": "Soaps", "price": 8, "size": "4.5 oz bar", "scents": ["Orange and peppermint"], "description": "Bright, wake-up bar for the morning shower.", "stock": 18 },
+  { "id": "charcoal-tea-tree-soap", "name": "Charcoal Tea Tree Soap", "category": "Soaps", "price": 9, "size": "4.5 oz bar", "scents": ["Tea tree"], "description": "Deep-cleaning bar for oily skin.", "stock": 12 },
+  { "id": "goat-milk-soap", "name": "Goat Milk Soap", "category": "Soaps", "price": 8, "size": "4.5 oz bar", "scents": ["Unscented"], "description": "Creamy, fragrance-free bar for sensitive skin.", "stock": 0 },
+  { "id": "shea-lotion", "name": "Shea Hand and Body Lotion", "category": "Lotions", "price": 16, "size": "8 oz bottle", "scents": ["Lavender", "Unscented"], "description": "Light daily lotion that absorbs quickly.", "stock": 15 },
+  { "id": "whipped-body-butter", "name": "Whipped Body Butter", "category": "Lotions", "price": 18, "size": "4 oz jar", "scents": ["Vanilla", "Rose"], "description": "Rich butter for dry elbows, knees and heels.", "stock": 9 },
+  { "id": "hand-cuticle-balm", "name": "Hand and Cuticle Balm", "category": "Lotions", "price": 10, "size": "2 oz tin", "scents": ["Unscented"], "description": "Pocket-size balm for hard-working hands.", "stock": 20 },
+  { "id": "lavender-bath-salts", "name": "Lavender Bath Salts", "category": "Bath", "price": 14, "size": "12 oz jar", "scents": ["Lavender"], "description": "Epsom and sea salt soak for tired muscles.", "stock": 14 },
+  { "id": "oatmeal-milk-bath", "name": "Oatmeal Milk Bath", "category": "Bath", "price": 14, "size": "10 oz jar", "scents": ["Unscented"], "description": "Soothing soak for itchy or dry skin.", "stock": 11 },
+  { "id": "soap-sampler-set", "name": "Soap Sampler Set", "category": "Gift sets", "price": 28, "size": "4 bars", "scents": ["One of each soap"], "description": "All four soaps in a gift box.", "stock": 6 },
+  { "id": "self-care-gift-box", "name": "Self-Care Gift Box", "category": "Gift sets", "price": 45, "size": "3 items", "scents": ["Lavender"], "description": "Soap, lotion and bath salts, ready to give.", "stock": 5 }
+]
