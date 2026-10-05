@@ -2,9 +2,10 @@
 const CART_KEY = "wren-clover-cart";
 function getCart() {
     try {
-        return JSON.parse(localStorage.getItem(CART_KEY)) || [];
+        const saved = localStorage.getItem(CART_KEY);
+        return saved ? JSON.parse(saved) : [];
     }
-    catch (error) {
+    catch {
         return [];
     }
 }
@@ -35,7 +36,7 @@ function updateCartCount() {
         return;
     }
     const count = getCart().reduce((total, item) => total + item.quantity, 0);
-    countEl.textContent = count;
+    countEl.textContent = String(count);
 }
 function setupAddToCart(product) {
     const form = document.querySelector(".product-form");
@@ -43,10 +44,14 @@ function setupAddToCart(product) {
         return;
     }
     const button = form.querySelector("button");
+    const scentSelect = form.querySelector("#scent");
+    const quantityInput = form.querySelector("#quantity");
+    if (!button || !scentSelect || !quantityInput) {
+        return;
+    }
     button.addEventListener("click", () => {
-        const scent = form.querySelector("#scent").value;
-        const quantity = Number(form.querySelector("#quantity").value) || 1;
-        addToCart(product, scent, quantity);
+        const quantity = Number(quantityInput.value) || 1;
+        addToCart(product, scentSelect.value, quantity);
         button.textContent = "Added to cart";
         setTimeout(() => {
             button.textContent = "Add to cart";

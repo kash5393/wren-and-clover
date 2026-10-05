@@ -1,19 +1,20 @@
 const CART_KEY = "wren-clover-cart";
 
-function getCart() {
+function getCart(): CartItem[] {
   try {
-    return JSON.parse(localStorage.getItem(CART_KEY)) || [];
-  } catch (error) {
+    const saved = localStorage.getItem(CART_KEY);
+    return saved ? (JSON.parse(saved) as CartItem[]) : [];
+  } catch {
     return [];
   }
 }
 
-function saveCart(cart) {
+function saveCart(cart: CartItem[]): void {
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   updateCartCount();
 }
 
-function addToCart(product, scent, quantity) {
+function addToCart(product: Product, scent: string, quantity: number): void {
   const cart = getCart();
   const existing = cart.find(
     (item) => item.id === product.id && item.scent === scent
@@ -34,26 +35,30 @@ function addToCart(product, scent, quantity) {
   saveCart(cart);
 }
 
-function updateCartCount() {
+function updateCartCount(): void {
   const countEl = document.querySelector("#cart-count");
   if (!countEl) {
     return;
   }
   const count = getCart().reduce((total, item) => total + item.quantity, 0);
-  countEl.textContent = count;
+  countEl.textContent = String(count);
 }
 
-function setupAddToCart(product) {
-  const form = document.querySelector(".product-form");
+function setupAddToCart(product: Product): void {
+  const form = document.querySelector<HTMLFormElement>(".product-form");
   if (!form) {
     return;
   }
   const button = form.querySelector("button");
+  const scentSelect = form.querySelector<HTMLSelectElement>("#scent");
+  const quantityInput = form.querySelector<HTMLInputElement>("#quantity");
+  if (!button || !scentSelect || !quantityInput) {
+    return;
+  }
 
   button.addEventListener("click", () => {
-    const scent = form.querySelector("#scent").value;
-    const quantity = Number(form.querySelector("#quantity").value) || 1;
-    addToCart(product, scent, quantity);
+    const quantity = Number(quantityInput.value) || 1;
+    addToCart(product, scentSelect.value, quantity);
 
     button.textContent = "Added to cart";
     setTimeout(() => {

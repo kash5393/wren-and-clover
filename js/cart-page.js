@@ -1,5 +1,5 @@
 "use strict";
-const cartEl = document.querySelector("#cart");
+const cartEl = getElement("#cart");
 function renderCart() {
     const cart = getCart();
     if (cart.length === 0) {
@@ -49,17 +49,25 @@ function renderCart() {
   `;
 }
 cartEl.addEventListener("change", (event) => {
-    if (!event.target.matches(".cart-qty")) {
+    const target = event.target;
+    if (!(target instanceof HTMLInputElement) || !target.matches(".cart-qty")) {
         return;
     }
     const cart = getCart();
-    const index = Number(event.target.dataset.index);
-    cart[index].quantity = Math.max(1, Number(event.target.value) || 1);
+    const item = cart[Number(target.dataset.index)];
+    if (!item) {
+        return;
+    }
+    item.quantity = Math.max(1, Number(target.value) || 1);
     saveCart(cart);
     renderCart();
 });
 cartEl.addEventListener("click", (event) => {
-    const removeIndex = event.target.dataset.remove;
+    const target = event.target;
+    if (!(target instanceof HTMLElement)) {
+        return;
+    }
+    const removeIndex = target.dataset.remove;
     if (removeIndex === undefined) {
         return;
     }

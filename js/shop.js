@@ -1,25 +1,14 @@
 "use strict";
-const grid = document.querySelector("#product-grid");
+const grid = getElement("#product-grid");
 const chips = document.querySelectorAll(".chip");
-const searchInput = document.querySelector("#search");
-const sortSelect = document.querySelector("#sort");
-const countEl = document.querySelector("#result-count");
-let products = [];
+const searchInput = getElement("#search");
+const sortSelect = getElement("#sort");
+const resultCount = getElement("#result-count");
+let allProducts = [];
 let activeCategory = "All";
-function productCard(product) {
-    return `
-    <article class="product-card">
-      <a href="product.html?id=${product.id}">
-        <div class="photo">Product photo${product.stock === 0 ? `<span class="badge">Out of stock</span>` : ""}</div>
-        <h3>${product.name}</h3>
-        <p class="price">$${product.price}</p>
-      </a>
-    </article>
-  `;
-}
 function render() {
     const term = searchInput.value.trim().toLowerCase();
-    const visible = products.filter((product) => {
+    const visible = allProducts.filter((product) => {
         const inCategory = activeCategory === "All" || product.category === activeCategory;
         const matchesSearch = product.name.toLowerCase().includes(term) ||
             product.description.toLowerCase().includes(term);
@@ -35,7 +24,7 @@ function render() {
     else if (sortBy === "name") {
         visible.sort((a, b) => a.name.localeCompare(b.name));
     }
-    countEl.textContent = `${visible.length} product${visible.length === 1 ? "" : "s"}`;
+    resultCount.textContent = `${visible.length} product${visible.length === 1 ? "" : "s"}`;
     if (visible.length === 0) {
         grid.innerHTML = "<p>No products match your search.</p>";
     }
@@ -45,7 +34,7 @@ function render() {
 }
 chips.forEach((chip) => {
     chip.addEventListener("click", () => {
-        activeCategory = chip.dataset.category;
+        activeCategory = (chip.dataset.category ?? "All");
         chips.forEach((other) => {
             other.classList.toggle("chip-active", other === chip);
         });
@@ -56,11 +45,7 @@ searchInput.addEventListener("input", render);
 sortSelect.addEventListener("change", render);
 async function loadProducts() {
     try {
-        const response = await fetch("data/products.json");
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        products = await response.json();
+        allProducts = await fetchProducts();
         render();
     }
     catch (error) {

@@ -1,54 +1,61 @@
 "use strict";
-const form = document.querySelector(".contact-form");
+const contactForm = document.querySelector(".contact-form");
 function showError(field, message) {
-    let error = field.parentElement.querySelector(".field-error");
+    const wrapper = field.parentElement;
+    if (!wrapper) {
+        return;
+    }
+    let error = wrapper.querySelector(".field-error");
     if (!error) {
         error = document.createElement("span");
         error.className = "field-error";
-        field.parentElement.append(error);
+        wrapper.append(error);
     }
     error.textContent = message;
     field.setAttribute("aria-invalid", message ? "true" : "false");
 }
-if (form) {
-    form.noValidate = true;
-    const status = document.createElement("p");
-    status.className = "form-status";
-    status.setAttribute("role", "status");
-    form.append(status);
-    form.addEventListener("submit", (event) => {
+if (contactForm) {
+    contactForm.noValidate = true;
+    const formStatus = document.createElement("p");
+    formStatus.className = "form-status";
+    formStatus.setAttribute("role", "status");
+    contactForm.append(formStatus);
+    contactForm.addEventListener("submit", (event) => {
         event.preventDefault();
-        const name = form.querySelector("#name");
-        const email = form.querySelector("#email");
-        const message = form.querySelector("#message");
-        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        let isValid = true;
-        if (name.value.trim() === "") {
-            showError(name, "Please enter your name.");
-            isValid = false;
-        }
-        else {
-            showError(name, "");
-        }
-        if (!emailPattern.test(email.value.trim())) {
-            showError(email, "Please enter a valid email address.");
-            isValid = false;
-        }
-        else {
-            showError(email, "");
-        }
-        if (message.value.trim().length < 10) {
-            showError(message, "Please write at least 10 characters.");
-            isValid = false;
-        }
-        else {
-            showError(message, "");
-        }
-        if (!isValid) {
-            status.textContent = "";
+        const nameInput = contactForm.querySelector("#name");
+        const emailInput = contactForm.querySelector("#email");
+        const messageInput = contactForm.querySelector("#message");
+        if (!nameInput || !emailInput || !messageInput) {
             return;
         }
-        status.textContent = `Thanks, ${name.value.trim()}. Your message passed all the checks.`;
-        form.reset();
+        const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        let isValid = true;
+        if (nameInput.value.trim() === "") {
+            showError(nameInput, "Please enter your name.");
+            isValid = false;
+        }
+        else {
+            showError(nameInput, "");
+        }
+        if (!emailPattern.test(emailInput.value.trim())) {
+            showError(emailInput, "Please enter a valid email address.");
+            isValid = false;
+        }
+        else {
+            showError(emailInput, "");
+        }
+        if (messageInput.value.trim().length < 10) {
+            showError(messageInput, "Please write at least 10 characters.");
+            isValid = false;
+        }
+        else {
+            showError(messageInput, "");
+        }
+        if (!isValid) {
+            formStatus.textContent = "";
+            return;
+        }
+        formStatus.textContent = `Thanks, ${nameInput.value.trim()}. Your message passed all the checks.`;
+        contactForm.reset();
     });
 }

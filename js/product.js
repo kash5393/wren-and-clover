@@ -1,19 +1,8 @@
 "use strict";
 const params = new URLSearchParams(window.location.search);
 const productId = params.get("id");
-const productEl = document.querySelector("#product");
+const productEl = getElement("#product");
 const relatedEl = document.querySelector("#related");
-function productCard(product) {
-    return `
-    <article class="product-card">
-      <a href="product.html?id=${product.id}">
-        <div class="photo">Product photo${product.stock === 0 ? `<span class="badge">Out of stock</span>` : ""}</div>
-        <h3>${product.name}</h3>
-        <p class="price">$${product.price}</p>
-      </a>
-    </article>
-  `;
-}
 function productDetails(product) {
     const options = product.scents
         .map((scent) => `<option>${scent}</option>`)
@@ -53,11 +42,7 @@ function productDetails(product) {
 }
 async function loadProduct() {
     try {
-        const response = await fetch("data/products.json");
-        if (!response.ok) {
-            throw new Error(`HTTP ${response.status}`);
-        }
-        const products = await response.json();
+        const products = await fetchProducts();
         const product = products.find((item) => item.id === productId);
         if (!product) {
             productEl.innerHTML = `
@@ -69,10 +54,12 @@ async function loadProduct() {
         document.title = `${product.name} | Wren & Clover Botanicals`;
         productEl.innerHTML = productDetails(product);
         setupAddToCart(product);
-        const related = products
-            .filter((item) => item.category === product.category && item.id !== product.id)
-            .slice(0, 3);
-        relatedEl.innerHTML = related.map(productCard).join("");
+        if (relatedEl) {
+            const related = products
+                .filter((item) => item.category === product.category && item.id !== product.id)
+                .slice(0, 3);
+            relatedEl.innerHTML = related.map(productCard).join("");
+        }
     }
     catch (error) {
         productEl.innerHTML = "<p>Sorry, this product could not be loaded.</p>";

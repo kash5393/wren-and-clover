@@ -1,28 +1,16 @@
-const grid = document.querySelector("#product-grid");
-const chips = document.querySelectorAll(".chip");
-const searchInput = document.querySelector("#search");
-const sortSelect = document.querySelector("#sort");
-const countEl = document.querySelector("#result-count");
+const grid = getElement<HTMLDivElement>("#product-grid");
+const chips = document.querySelectorAll<HTMLButtonElement>(".chip");
+const searchInput = getElement<HTMLInputElement>("#search");
+const sortSelect = getElement<HTMLSelectElement>("#sort");
+const resultCount = getElement<HTMLParagraphElement>("#result-count");
 
-let products = [];
-let activeCategory = "All";
+let allProducts: Product[] = [];
+let activeCategory: Category | "All" = "All";
 
-function productCard(product) {
-  return `
-    <article class="product-card">
-      <a href="product.html?id=${product.id}">
-        <div class="photo">Product photo${product.stock === 0 ? `<span class="badge">Out of stock</span>` : ""}</div>
-        <h3>${product.name}</h3>
-        <p class="price">$${product.price}</p>
-      </a>
-    </article>
-  `;
-}
-
-function render() {
+function render(): void {
   const term = searchInput.value.trim().toLowerCase();
 
-  const visible = products.filter((product) => {
+  const visible = allProducts.filter((product) => {
     const inCategory =
       activeCategory === "All" || product.category === activeCategory;
     const matchesSearch =
@@ -40,7 +28,7 @@ function render() {
     visible.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  countEl.textContent = `${visible.length} product${visible.length === 1 ? "" : "s"}`;
+  resultCount.textContent = `${visible.length} product${visible.length === 1 ? "" : "s"}`;
 
   if (visible.length === 0) {
     grid.innerHTML = "<p>No products match your search.</p>";
@@ -51,7 +39,7 @@ function render() {
 
 chips.forEach((chip) => {
   chip.addEventListener("click", () => {
-    activeCategory = chip.dataset.category;
+    activeCategory = (chip.dataset.category ?? "All") as Category | "All";
     chips.forEach((other) => {
       other.classList.toggle("chip-active", other === chip);
     });
@@ -62,13 +50,9 @@ chips.forEach((chip) => {
 searchInput.addEventListener("input", render);
 sortSelect.addEventListener("change", render);
 
-async function loadProducts() {
+async function loadProducts(): Promise<void> {
   try {
-    const response = await fetch("data/products.json");
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}`);
-    }
-    products = await response.json();
+    allProducts = await fetchProducts();
     render();
   } catch (error) {
     grid.innerHTML = "<p>Sorry, the products could not be loaded.</p>";
