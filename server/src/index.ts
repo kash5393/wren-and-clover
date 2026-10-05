@@ -29,7 +29,9 @@ app.get("/api/products", async (request, response) => {
         product.description.toLowerCase().includes(term)
     );
   }
-
+    if (request.query.inStock === "true") {
+    products = products.filter((product) => product.stock > 0);
+  }
   response.json(products);
 });
 
