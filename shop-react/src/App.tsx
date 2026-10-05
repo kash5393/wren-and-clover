@@ -1,3 +1,5 @@
+import Shop from "./pages/Shop";
+
 function App() {
   return (
     <>
@@ -9,12 +11,7 @@ function App() {
       </header>
 
       <main>
-        <section className="section">
-          <div className="container">
-            <h1 className="page-title">Shop</h1>
-            <p>The React version of the shop starts here.</p>
-          </div>
-        </section>
+        <Shop />
       </main>
     </>
   );
