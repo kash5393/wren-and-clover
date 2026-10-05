@@ -1,19 +1,20 @@
+import { Route, Routes } from "react-router";
+import Layout from "./components/Layout";
+import Home from "./pages/Home";
+import NotFound from "./pages/NotFound";
+import ProductPage from "./pages/ProductPage";
 import Shop from "./pages/Shop";
 
 function App() {
   return (
-    <>
-      <header className="site-header">
-        <div className="container header-inner">
-          <a className="logo" href="/">Wren &amp; Clover</a>
-          <a className="cart-link" href="#">Cart (0)</a>
-        </div>
-      </header>
-
-      <main>
-        <Shop />
-      </main>
-    </>
+    <Routes>
+      <Route element={<Layout />}>
+        <Route path="/" element={<Home />} />
+        <Route path="/shop" element={<Shop />} />
+        <Route path="/products/:id" element={<ProductPage />} />
+        <Route path="*" element={<NotFound />} />
+      </Route>
+    </Routes>
   );
 }
 

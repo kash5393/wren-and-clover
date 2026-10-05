@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import type { Product } from "../types";
 
 interface ProductCardProps {
@@ -7,14 +8,15 @@ interface ProductCardProps {
 function ProductCard({ product }: ProductCardProps) {
   return (
     <article className="product-card">
-      <a href={`/products/${product.id}`}>
+      <Link to={`/products/${product.id}`}>
         <div className="photo">
           Product photo
           {product.stock === 0 && <span className="badge">Out of stock</span>}
         </div>
         <h3>{product.name}</h3>
         <p className="price">${product.price}</p>
-      </a>
+        <p className="product-size">{product.size}</p>
+      </Link>
     </article>
   );
 }

@@ -529,3 +529,8 @@ th {
   font-weight: 600;
   color: var(--color-primary-dark);
 }
+.product-size {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--color-muted);
+}
