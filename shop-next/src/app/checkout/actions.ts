@@ -1,5 +1,6 @@
 "use server";
 
+import { getCurrentUser } from "@/lib/auth";
 import { createOrder } from "@/lib/orders";
 import type { OrderResult } from "@/lib/orders";
 
@@ -18,7 +19,8 @@ export interface OrderRequest {
 
 export async function placeOrder(request: OrderRequest): Promise<OrderResult> {
   try {
-    const result = await createOrder(request, null);
+    const user = await getCurrentUser();
+    const result = await createOrder(request, user ? user.id : null);
     if (result.ok) {
       console.log(`New order ${result.orderNumber}: $${result.total}`);
     }

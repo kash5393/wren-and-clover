@@ -1,6 +1,7 @@
 import "server-only";
 import { z } from "zod";
 import { pool } from "./db";
+import type { ShippingDetails } from "./types";
 
 const orderSchema = z.object({
   customer: z.object({
@@ -131,4 +132,55 @@ export async function createOrder(input: unknown, userId: number | null): Promis
   } finally {
     client.release();
   }
+}
+
+export interface OrderSummary {
+  orderNumber: string;
+  createdAt: string;
+  total: number;
+  lines: { name: string; scent: string; quantity: number; unitPrice: number }[];
+}
+
+export async function getOrdersForUser(userId: number): Promise<OrderSummary[]> {
+  const result = await pool.query(
+    `SELECT
+       o.order_number AS "orderNumber",
+       o.created_at AS "createdAt",
+       o.total_cents / 100.0 AS total,
+       json_agg(
+         json_build_object(
+           'name', i.product_name,
+           'scent', i.scent,
+           'quantity', i.quantity,
+           'unitPrice', i.unit_price_cents / 100.0
+         )
+         ORDER BY i.id
+       ) AS lines
+     FROM orders o
+     JOIN order_items i ON i.order_id = o.id
+     WHERE o.user_id = $1
+     GROUP BY o.id
+     ORDER BY o.id DESC`,
+    [userId]
+  );
+
+  return result.rows.map((row) => ({
+    orderNumber: row.orderNumber,
+    createdAt: new Date(row.createdAt).toISOString(),
+    total: Number(row.total),
+    lines: row.lines,
+  }));
+}
+
+export async function getSavedShipping(userId: number): Promise<ShippingDetails | null> {
+  const result = await pool.query<ShippingDetails>(
+    `SELECT customer_name AS name, email, phone, address, city, state, postcode
+     FROM orders
+     WHERE user_id = $1
+     ORDER BY id DESC
+     LIMIT 1`,
+    [userId]
+  );
+
+  return result.rows[0] ?? null;
 }

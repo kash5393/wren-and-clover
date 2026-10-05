@@ -684,3 +684,10 @@ a.chip {
     grid-template-columns: 2fr 1fr auto;
   }
 }
+
+/* The log out button sits in a small form inside the navigation */
+.site-nav form {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}

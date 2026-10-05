@@ -20,3 +20,20 @@ export interface CartItem {
   scent: string;
   quantity: number;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: "customer" | "owner";
+}
+
+export interface ShippingDetails {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postcode: string;
+}

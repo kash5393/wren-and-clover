@@ -5,6 +5,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useCart } from "@/components/CartProvider";
 import FormField from "@/components/FormField";
+import type { ShippingDetails } from "@/lib/types";
 import { placeOrder } from "./actions";
 
 interface CheckoutFields {
@@ -75,9 +76,18 @@ function validate(form: CheckoutFields): CheckoutErrors {
   return errors;
 }
 
-export default function CheckoutForm() {
+interface CheckoutFormProps {
+  user: { name: string; email: string } | null;
+  savedShipping: ShippingDetails | null;
+}
+
+export default function CheckoutForm({ user, savedShipping }: CheckoutFormProps) {
   const { items, total, ready, clearCart } = useCart();
-  const [form, setForm] = useState<CheckoutFields>(emptyForm);
+  const [form, setForm] = useState<CheckoutFields>({
+    ...emptyForm,
+    ...(user ? { name: user.name, email: user.email } : {}),
+    ...(savedShipping ?? {}),
+  });
   const [errors, setErrors] = useState<CheckoutErrors>({});
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -129,6 +139,19 @@ export default function CheckoutForm() {
           will be sent to {form.email.trim()}.
         </p>
         <p>This is a practice checkout: no payment was taken and nothing will be shipped.</p>
+        {user ? (
+          <p>
+            You can see this order under <Link href="/orders">My orders</Link>.
+          </p>
+        ) : (
+          <p>
+            Want to see your orders in one place next time?{" "}
+            <Link href={`/signup?email=${encodeURIComponent(form.email.trim())}`}>
+              Create an account
+            </Link>
+            . It&apos;s optional.
+          </p>
+        )}
         <Link className="button" href="/shop">Back to the shop</Link>
       </div>
     );
@@ -157,9 +180,20 @@ export default function CheckoutForm() {
     <>
       <h1 className="page-title">Checkout</h1>
 
-      <p className="checkout-notice">
-        You&apos;re checking out as a guest, with no account needed.
-      </p>
+      {user ? (
+        <p className="checkout-notice">
+          Signed in as <strong>{user.name}</strong> ({user.email}).{" "}
+          {savedShipping
+            ? "We've filled in the details from your last order. Check them before you place this one."
+            : "Your details will be remembered after your first order."}
+        </p>
+      ) : (
+        <p className="checkout-notice">
+          You&apos;re checking out as a guest, with no account needed. Have an
+          account? <Link href="/login?next=/checkout">Sign in</Link> to fill in
+          your details.
+        </p>
+      )}
 
       <div className="checkout-layout">
         <form className="contact-form" noValidate onSubmit={handleSubmit}>

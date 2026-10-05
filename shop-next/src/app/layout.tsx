@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { CartProvider } from "@/components/CartProvider";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import { getCurrentUser } from "@/lib/auth";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -17,7 +18,9 @@ interface RootLayoutProps {
   children: ReactNode;
 }
 
-export default function RootLayout({ children }: RootLayoutProps) {
+export default async function RootLayout({ children }: RootLayoutProps) {
+  const user = await getCurrentUser();
+
   return (
     <html lang="en">
       <head>
@@ -31,7 +34,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body>
         <CartProvider>
-          <Header />
+          <Header userName={user ? user.name : null} />
           <main>{children}</main>
           <Footer />
         </CartProvider>
