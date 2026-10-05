@@ -1,6 +1,7 @@
 "use server";
 
 import { z } from "zod";
+import { pool } from "@/lib/db";
 
 const messageSchema = z.object({
   name: z.string().trim().min(1, "Please enter your name."),
@@ -35,8 +36,9 @@ export async function sendMessage(
     return { status: "error", errors };
   }
 
-  console.log(
-    `New contact message from ${parsed.data.name} <${parsed.data.email}>: ${parsed.data.message}`
+  await pool.query(
+    "INSERT INTO contact_messages (name, email, message) VALUES ($1, $2, $3)",
+    [parsed.data.name, parsed.data.email, parsed.data.message]
   );
 
   return { status: "sent", sentTo: parsed.data.name };
