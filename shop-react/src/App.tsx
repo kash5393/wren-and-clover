@@ -5,10 +5,12 @@ import CartPage from "./pages/CartPage";
 import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
 import Shipping from "./pages/Shipping";
 import Shop from "./pages/Shop";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -22,6 +24,8 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/shipping" element={<Shipping />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>

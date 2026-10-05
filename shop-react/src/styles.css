@@ -589,3 +589,26 @@ th {
     grid-template-columns: 3fr 2fr;
   }
 }
+
+/* Log out button in the navigation */
+.nav-button {
+  padding: 0.75rem 0;
+  font: inherit;
+  color: var(--color-text);
+  text-align: left;
+  background: none;
+  border: none;
+  border-top: 1px solid var(--color-border);
+  cursor: pointer;
+}
+
+.nav-button:hover {
+  color: var(--color-primary);
+}
+
+@media (min-width: 768px) {
+  .nav-button {
+    padding: 0.5rem 0;
+    border-top: none;
+  }
+}

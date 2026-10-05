@@ -18,3 +18,10 @@ export interface CartItem {
   scent: string;
   quantity: number;
 }
+
+export interface User {
+  id: number;
+  email: string;
+  name: string;
+  role: "customer" | "owner";
+}
