@@ -1,7 +1,7 @@
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { createOrder, listOrders } from "./orders.js";
-import { loadProducts } from "./products.js";
+import { createProduct, deleteProduct, loadProducts, updateProduct } from "./products.js";
 
 const app = express();
 const port = Number(process.env.PORT) || 4000;
@@ -43,6 +43,39 @@ app.get("/api/products/:id", async (request, response) => {
   }
 
   response.json(product);
+});
+
+app.post("/api/products", async (request, response) => {
+  const result = await createProduct(request.body);
+
+  if (!result.ok) {
+    response.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  response.status(201).json(result.product);
+});
+
+app.patch("/api/products/:id", async (request, response) => {
+  const result = await updateProduct(request.params.id, request.body);
+
+  if (!result.ok) {
+    response.status(result.status).json({ error: result.error });
+    return;
+  }
+
+  response.json(result.product);
+});
+
+app.delete("/api/products/:id", async (request, response) => {
+  const deleted = await deleteProduct(request.params.id);
+
+  if (!deleted) {
+    response.status(404).json({ error: "Product not found" });
+    return;
+  }
+
+  response.status(204).end();
 });
 
 app.get("/api/categories", async (_request, response) => {
