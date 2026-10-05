@@ -1,9 +1,18 @@
 import { Router } from "express";
+import { rateLimit } from "express-rate-limit";
 import { currentUser, endSession, logIn, signUp, startSession } from "./auth.js";
 
 export const authRouter = Router();
 
-authRouter.post("/signup", async (request, response) => {
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { error: "Too many attempts. Please wait 15 minutes and try again." },
+});
+
+authRouter.post("/signup", authLimiter, async (request, response) => {
   const result = await signUp(request.body);
 
   if (!result.ok) {
@@ -15,7 +24,7 @@ authRouter.post("/signup", async (request, response) => {
   response.status(201).json({ user: result.user });
 });
 
-authRouter.post("/login", async (request, response) => {
+authRouter.post("/login", authLimiter, async (request, response) => {
   const result = await logIn(request.body);
 
   if (!result.ok) {

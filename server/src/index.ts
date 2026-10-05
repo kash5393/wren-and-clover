@@ -1,8 +1,9 @@
 import cookieParser from "cookie-parser";
 import express from "express";
+import helmet from "helmet";
 import type { NextFunction, Request, Response } from "express";
 import { authRouter } from "./auth-routes.js";
-import { currentUser, requireOwner, requireUser } from "./auth.js";
+import { currentUser, deleteExpiredSessions, requireOwner, requireUser } from "./auth.js";
 import type { User } from "./auth.js";
 import { createOrder, getSavedShipping, listAllOrders, listOrdersForUser } from "./orders.js";
 import {
@@ -17,7 +18,9 @@ import {
 const app = express();
 const port = Number(process.env.PORT) || 4000;
 
-app.use(express.json());
+app.disable("x-powered-by");
+app.use(helmet());
+app.use(express.json({ limit: "100kb" }));
 app.use(cookieParser());
 
 app.use("/api/auth", authRouter);
@@ -135,4 +138,12 @@ app.use((error: unknown, _request: Request, response: Response, _next: NextFunct
 
 app.listen(port, () => {
   console.log(`Shop API running at http://localhost:${port}`);
+
+  deleteExpiredSessions()
+    .then((count) => {
+      if (count > 0) {
+        console.log(`Removed ${count} expired sessions.`);
+      }
+    })
+    .catch((error: unknown) => console.error(error));
 });

@@ -105,6 +105,11 @@ export async function startSession(response: Response, userId: number): Promise<
   });
 }
 
+export async function deleteExpiredSessions(): Promise<number> {
+  const result = await pool.query("DELETE FROM sessions WHERE expires_at <= now()");
+  return result.rowCount ?? 0;
+}
+
 export async function endSession(request: Request, response: Response): Promise<void> {
   const sessionId: unknown = request.cookies?.[SESSION_COOKIE];
   if (typeof sessionId === "string") {
