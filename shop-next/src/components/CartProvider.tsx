@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
+import { addToCart, cartCount, cartTotal, removeFromCart, setQuantity } from "@/lib/cart-math";
 import type { CartItem, Product } from "@/lib/types";
 
 const CART_KEY = "wren-clover-cart";
@@ -51,50 +52,23 @@ export function CartProvider({ children }: CartProviderProps) {
   }, [items, ready]);
 
   function addItem(product: Product, scent: string, quantity: number) {
-    setItems((current) => {
-      const exists = current.some(
-        (item) => item.id === product.id && item.scent === scent
-      );
-
-      if (exists) {
-        return current.map((item) =>
-          item.id === product.id && item.scent === scent
-            ? { ...item, quantity: item.quantity + quantity }
-            : item
-        );
-      }
-
-      return [
-        ...current,
-        {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          scent: scent,
-          quantity: quantity,
-        },
-      ];
-    });
+    setItems((current) => addToCart(current, product, scent, quantity));
   }
 
   function updateQuantity(index: number, quantity: number) {
-    setItems((current) =>
-      current.map((item, itemIndex) =>
-        itemIndex === index ? { ...item, quantity: Math.max(1, quantity) } : item
-      )
-    );
+    setItems((current) => setQuantity(current, index, quantity));
   }
 
   function removeItem(index: number) {
-    setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
+    setItems((current) => removeFromCart(current, index));
   }
 
   function clearCart() {
     setItems([]);
   }
 
-  const count = items.reduce((sum, item) => sum + item.quantity, 0);
-  const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const count = cartCount(items);
+  const total = cartTotal(items);
 
   return (
     <CartContext.Provider

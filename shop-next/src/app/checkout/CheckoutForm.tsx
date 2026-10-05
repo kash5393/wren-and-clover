@@ -5,75 +5,14 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useCart } from "@/components/CartProvider";
 import FormField from "@/components/FormField";
+import { emptyCheckoutForm, usStates, validateCheckout } from "@/lib/checkout-validation";
+import type { CheckoutErrors, CheckoutFields } from "@/lib/checkout-validation";
 import type { ShippingDetails } from "@/lib/types";
 import { placeOrder } from "./actions";
-
-interface CheckoutFields {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  city: string;
-  state: string;
-  postcode: string;
-}
-
-type CheckoutErrors = Partial<Record<keyof CheckoutFields, string>>;
 
 interface PlacedOrder {
   orderNumber: string;
   total: number;
-}
-
-const emptyForm: CheckoutFields = {
-  name: "",
-  email: "",
-  phone: "",
-  address: "",
-  city: "",
-  state: "",
-  postcode: "",
-};
-
-const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const phonePattern = /^[0-9+()\-\s]{7,}$/;
-const zipPattern = /^\d{5}(-\d{4})?$/;
-
-const usStates = [
-  "AL", "AK", "AZ", "AR", "CA", "CO", "CT", "DE", "DC", "FL",
-  "GA", "HI", "ID", "IL", "IN", "IA", "KS", "KY", "LA", "ME",
-  "MD", "MA", "MI", "MN", "MS", "MO", "MT", "NE", "NV", "NH",
-  "NJ", "NM", "NY", "NC", "ND", "OH", "OK", "OR", "PA", "RI",
-  "SC", "SD", "TN", "TX", "UT", "VT", "VA", "WA", "WV", "WI",
-  "WY",
-];
-
-function validate(form: CheckoutFields): CheckoutErrors {
-  const errors: CheckoutErrors = {};
-
-  if (form.name.trim() === "") {
-    errors.name = "Please enter your name.";
-  }
-  if (!emailPattern.test(form.email.trim())) {
-    errors.email = "Please enter a valid email address.";
-  }
-  if (!phonePattern.test(form.phone.trim())) {
-    errors.phone = "Please enter a valid phone number.";
-  }
-  if (form.address.trim() === "") {
-    errors.address = "Please enter your street address.";
-  }
-  if (form.city.trim() === "") {
-    errors.city = "Please enter your city.";
-  }
-  if (!usStates.includes(form.state)) {
-    errors.state = "Please choose your state.";
-  }
-  if (!zipPattern.test(form.postcode.trim())) {
-    errors.postcode = "Please enter a valid ZIP code.";
-  }
-
-  return errors;
 }
 
 interface CheckoutFormProps {
@@ -85,7 +24,7 @@ interface CheckoutFormProps {
 export default function CheckoutForm({ user, savedShipping, paymentsOn }: CheckoutFormProps) {
   const { items, total, ready, clearCart } = useCart();
   const [form, setForm] = useState<CheckoutFields>({
-    ...emptyForm,
+    ...emptyCheckoutForm,
     ...(user ? { name: user.name, email: user.email } : {}),
     ...(savedShipping ?? {}),
   });
@@ -101,7 +40,7 @@ export default function CheckoutForm({ user, savedShipping, paymentsOn }: Checko
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    const foundErrors = validate(form);
+    const foundErrors = validateCheckout(form);
     setErrors(foundErrors);
     if (Object.keys(foundErrors).length > 0) {
       return;

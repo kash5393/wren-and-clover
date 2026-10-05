@@ -6,6 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { z } from "zod";
 import { pool } from "./db";
+import { safeNextPath } from "./paths";
 import type { User } from "./types";
 
 const SESSION_COOKIE = "session";
@@ -156,13 +157,6 @@ export const getCurrentUser = cache(async (): Promise<User | null> => {
   return result.rows[0] ?? null;
 });
 
-export function safeNextPath(value: unknown): string {
-  if (typeof value === "string" && value.startsWith("/") && !value.startsWith("//")) {
-    return value;
-  }
-  return "/";
-}
-
 export async function requireOwner(): Promise<User> {
   const user = await getCurrentUser();
 
@@ -175,3 +169,5 @@ export async function requireOwner(): Promise<User> {
 
   return user;
 }
+
+export { safeNextPath };
