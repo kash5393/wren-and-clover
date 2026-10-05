@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { getCurrentUser } from "@/lib/auth";
 import { getSavedShipping } from "@/lib/orders";
+import { paymentsEnabled } from "@/lib/payments";
 import CheckoutForm from "./CheckoutForm";
 
 export const metadata: Metadata = {
@@ -17,6 +18,7 @@ export default async function CheckoutPage() {
         <CheckoutForm
           user={user ? { name: user.name, email: user.email } : null}
           savedShipping={savedShipping}
+          paymentsOn={paymentsEnabled()}
         />
       </div>
     </section>

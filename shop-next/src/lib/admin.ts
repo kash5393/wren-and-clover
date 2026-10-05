@@ -15,7 +15,7 @@ export interface AdminOrder {
   id: number;
   orderNumber: string;
   createdAt: string;
-  status: "new" | "shipped";
+  status: "pending" | "new" | "shipped" | "cancelled";
   customerName: string;
   email: string;
   phone: string;
@@ -42,7 +42,8 @@ export async function getDashboardStats(): Promise<DashboardStats> {
          COUNT(*) AS order_count,
          COUNT(*) FILTER (WHERE status = 'new') AS new_count,
          SUM(total_cents) AS sales_cents
-       FROM orders`
+       FROM orders
+       WHERE status IN ('new', 'shipped')`
     ),
     pool.query<{ count: string }>("SELECT COUNT(*) AS count FROM contact_messages"),
     pool.query<{ id: string; name: string; stock: number }>(
@@ -50,12 +51,14 @@ export async function getDashboardStats(): Promise<DashboardStats> {
     ),
     pool.query<{ name: string; units_sold: string; revenue_cents: string }>(
       `SELECT
-         product_name AS name,
-         SUM(quantity) AS units_sold,
-         SUM(quantity * unit_price_cents) AS revenue_cents
-       FROM order_items
-       GROUP BY product_name
-       ORDER BY SUM(quantity) DESC
+         i.product_name AS name,
+         SUM(i.quantity) AS units_sold,
+         SUM(i.quantity * i.unit_price_cents) AS revenue_cents
+       FROM order_items i
+       JOIN orders o ON o.id = i.order_id
+       WHERE o.status IN ('new', 'shipped')
+       GROUP BY i.product_name
+       ORDER BY SUM(i.quantity) DESC
        LIMIT 5`
     ),
   ]);
@@ -117,7 +120,10 @@ export async function getAllOrders(): Promise<AdminOrder[]> {
 }
 
 export async function setOrderStatus(orderId: number, status: "new" | "shipped"): Promise<void> {
-  await pool.query("UPDATE orders SET status = $1 WHERE id = $2", [status, orderId]);
+  await pool.query(
+    "UPDATE orders SET status = $1 WHERE id = $2 AND status IN ('new', 'shipped')",
+    [status, orderId]
+  );
 }
 
 export async function getMessages(): Promise<ContactMessage[]> {

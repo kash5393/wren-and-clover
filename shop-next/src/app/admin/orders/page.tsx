@@ -7,6 +7,13 @@ export const metadata: Metadata = {
   title: "Orders",
 };
 
+const statusLabels = {
+  pending: "Awaiting payment",
+  new: "Paid, waiting to ship",
+  shipped: "Shipped",
+  cancelled: "Cancelled (not paid)",
+};
+
 export default async function AdminOrdersPage() {
   await requireOwner();
   const orders = await getAllOrders();
@@ -24,7 +31,7 @@ export default async function AdminOrdersPage() {
               <header className="order-card-header">
                 <h2>{order.orderNumber}</h2>
                 <p>
-                  {order.createdAt.slice(0, 10)} · {order.status === "shipped" ? "Shipped" : "Waiting to ship"}
+                  {order.createdAt.slice(0, 10)} · {statusLabels[order.status]}
                 </p>
               </header>
 
@@ -51,17 +58,19 @@ export default async function AdminOrdersPage() {
                 <strong>${order.total}</strong>
               </p>
 
-              <form action={setOrderStatusAction}>
-                <input type="hidden" name="orderId" value={order.id} />
-                <input
-                  type="hidden"
-                  name="status"
-                  value={order.status === "shipped" ? "new" : "shipped"}
-                />
-                <button className={order.status === "shipped" ? "link-button" : "button"} type="submit">
-                  {order.status === "shipped" ? "Mark as not shipped" : "Mark as shipped"}
-                </button>
-              </form>
+              {(order.status === "new" || order.status === "shipped") && (
+                <form action={setOrderStatusAction}>
+                  <input type="hidden" name="orderId" value={order.id} />
+                  <input
+                    type="hidden"
+                    name="status"
+                    value={order.status === "shipped" ? "new" : "shipped"}
+                  />
+                  <button className={order.status === "shipped" ? "link-button" : "button"} type="submit">
+                    {order.status === "shipped" ? "Mark as not shipped" : "Mark as shipped"}
+                  </button>
+                </form>
+              )}
             </article>
           ))}
         </div>

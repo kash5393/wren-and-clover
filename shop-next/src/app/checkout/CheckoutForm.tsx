@@ -79,9 +79,10 @@ function validate(form: CheckoutFields): CheckoutErrors {
 interface CheckoutFormProps {
   user: { name: string; email: string } | null;
   savedShipping: ShippingDetails | null;
+  paymentsOn: boolean;
 }
 
-export default function CheckoutForm({ user, savedShipping }: CheckoutFormProps) {
+export default function CheckoutForm({ user, savedShipping, paymentsOn }: CheckoutFormProps) {
   const { items, total, ready, clearCart } = useCart();
   const [form, setForm] = useState<CheckoutFields>({
     ...emptyForm,
@@ -118,13 +119,18 @@ export default function CheckoutForm({ user, savedShipping }: CheckoutFormProps)
       })),
     });
 
-    setSubmitting(false);
-
     if (!result.ok) {
+      setSubmitting(false);
       setServerError(result.error);
       return;
     }
 
+    if (result.kind === "payment") {
+      window.location.assign(result.paymentUrl);
+      return;
+    }
+
+    setSubmitting(false);
     setPlacedOrder({ orderNumber: result.orderNumber, total: result.total });
     clearCart();
   }
@@ -263,7 +269,7 @@ export default function CheckoutForm({ user, savedShipping }: CheckoutFormProps)
             </p>
           )}
           <button className="button button-full" type="submit" disabled={submitting}>
-            {submitting ? "Placing order..." : "Place order"}
+            {submitting ? "Please wait..." : paymentsOn ? "Continue to payment" : "Place order"}
           </button>
         </form>
 

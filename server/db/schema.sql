@@ -45,7 +45,10 @@ CREATE TABLE orders (
   state TEXT NOT NULL,
   postcode TEXT NOT NULL,
   total_cents INTEGER NOT NULL,
-  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'shipped'))
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('pending', 'new', 'shipped', 'cancelled')),
+  stripe_session_id TEXT,
+  payment_token TEXT,
+  paid_at TIMESTAMPTZ
 );
 
 CREATE TABLE order_items (

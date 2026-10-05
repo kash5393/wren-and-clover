@@ -32,7 +32,14 @@ export default async function OrdersPage() {
               <article className="order-card" key={order.orderNumber}>
                 <header className="order-card-header">
                   <h2>{order.orderNumber}</h2>
-                  <p>{order.createdAt.slice(0, 10)}</p>
+                  <p>
+                    {order.createdAt.slice(0, 10)} ·{" "}
+                    {order.status === "shipped"
+                      ? "Shipped"
+                      : order.status === "pending"
+                        ? "Awaiting payment"
+                        : "Being prepared"}
+                  </p>
                 </header>
                 <ul>
                   {order.lines.map((line) => (
