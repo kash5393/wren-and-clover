@@ -74,6 +74,7 @@ async function loadProduct() {
 
     document.title = `${product.name} | Wren & Clover Botanicals`;
     productEl.innerHTML = productDetails(product);
+    setupAddToCart(product);
 
     const related = products
       .filter((item) => item.category === product.category && item.id !== product.id)
