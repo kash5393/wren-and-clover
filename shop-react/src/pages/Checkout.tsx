@@ -149,7 +149,7 @@ function Checkout() {
           {!user && (
             <p>
               Want to see your orders in one place next time?{" "}
-              <Link to="/signup">Create an account</Link>. It's optional.
+              <Link to={`/signup?email=${encodeURIComponent(form.email.trim())}`}>Create an account</Link>. It's optional.
             </p>
           )}
           <Link className="button" to="/shop">Back to the shop</Link>

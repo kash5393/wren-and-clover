@@ -7,6 +7,7 @@ interface FormFieldProps {
   type?: string;
   multiline?: boolean;
   options?: string[];
+  autoComplete?: string;
 }
 
 function FormField({
@@ -18,6 +19,7 @@ function FormField({
   type = "text",
   multiline = false,
   options,
+  autoComplete,
 }: FormFieldProps) {
   const invalid = error ? true : undefined;
   let control;
@@ -28,6 +30,7 @@ function FormField({
         id={id}
         value={value}
         aria-invalid={invalid}
+        autoComplete={autoComplete}
         onChange={(event) => onChange(event.target.value)}
       >
         <option value="">Select...</option>
@@ -45,6 +48,7 @@ function FormField({
         rows={6}
         value={value}
         aria-invalid={invalid}
+        autoComplete={autoComplete}
         onChange={(event) => onChange(event.target.value)}
       />
     );
@@ -55,6 +59,7 @@ function FormField({
         type={type}
         value={value}
         aria-invalid={invalid}
+        autoComplete={autoComplete}
         onChange={(event) => onChange(event.target.value)}
       />
     );

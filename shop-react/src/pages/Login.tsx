@@ -39,6 +39,7 @@ function Login() {
             id="password"
             label="Password"
             type="password"
+            autoComplete="current-password"
             value={password}
             onChange={setPassword}
           />

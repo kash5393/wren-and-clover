@@ -11,7 +11,7 @@ function Signup() {
   const requested = searchParams.get("next") ?? "/";
   const nextPage = requested.startsWith("/") && !requested.startsWith("//") ? requested : "/";
   const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(searchParams.get("email") ?? "");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -47,6 +47,7 @@ function Signup() {
             id="password"
             label="Password (at least 8 characters)"
             type="password"
+            autoComplete="new-password"
             value={password}
             onChange={setPassword}
           />
