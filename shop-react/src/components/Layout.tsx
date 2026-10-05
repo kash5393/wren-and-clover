@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Link, Outlet } from "react-router";
+import { useCart } from "../context/CartContext";
 
 function Layout() {
+  const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
 
@@ -34,7 +36,7 @@ function Layout() {
           </nav>
 
           <Link className="cart-link" to="/cart" onClick={closeMenu}>
-            Cart (0)
+            Cart ({count})
           </Link>
         </div>
       </header>

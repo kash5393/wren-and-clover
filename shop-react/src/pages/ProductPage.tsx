@@ -1,4 +1,5 @@
 import { Link, useParams } from "react-router";
+import AddToCartForm from "../components/AddToCartForm";
 import ProductCard from "../components/ProductCard";
 import { useProducts } from "../hooks/useProducts";
 
@@ -29,7 +30,6 @@ function ProductPage() {
     );
   }
 
-  const inStock = product.stock > 0;
   const related = products
     .filter((item) => item.category === product.category && item.id !== product.id)
     .slice(0, 3);
@@ -52,25 +52,7 @@ function ProductPage() {
                 {product.description} {product.size}.
               </p>
 
-              <form className="product-form">
-                <div className="field">
-                  <label htmlFor="scent">Scent</label>
-                  <select id="scent" name="scent">
-                    {product.scents.map((scent) => (
-                      <option key={scent}>{scent}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div className="field">
-                  <label htmlFor="quantity">Quantity</label>
-                  <input id="quantity" name="quantity" type="number" min="1" defaultValue="1" />
-                </div>
-
-                <button className="button button-full" type="button" disabled={!inStock}>
-                  {inStock ? "Add to cart" : "Out of stock"}
-                </button>
-              </form>
+              <AddToCartForm key={product.id} product={product} />
             </div>
           </div>
         </div>
