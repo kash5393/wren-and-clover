@@ -455,3 +455,77 @@ th {
   font-size: 1.25rem;
   text-align: right;
 }
+
+/* Out of stock badge */
+.photo {
+  position: relative;
+}
+
+.badge {
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.8rem;
+  color: #ffffff;
+  background: var(--color-text);
+  border-radius: 999px;
+}
+
+/* Mobile menu */
+.menu-toggle {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  color: var(--color-text);
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  cursor: pointer;
+}
+
+.site-nav {
+  display: none;
+  flex-direction: column;
+  flex-basis: 100%;
+  order: 3;
+  gap: 0;
+}
+
+.site-nav.is-open {
+  display: flex;
+}
+
+.site-nav a {
+  padding-block: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+
+@media (min-width: 768px) {
+  .menu-toggle {
+    display: none;
+  }
+
+  .site-nav {
+    display: flex;
+    flex-direction: row;
+    flex-basis: auto;
+    order: 0;
+    gap: var(--space-3);
+  }
+
+  .site-nav a {
+    padding-block: 0.5rem;
+    border-top: none;
+  }
+}
+
+/* Form messages */
+.field-error {
+  color: #b3261e;
+  font-size: 0.9rem;
+}
+
+.form-status {
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}

@@ -11,7 +11,7 @@ function productCard(product) {
   return `
     <article class="product-card">
       <a href="product.html?id=${product.id}">
-        <div class="photo">Product photo</div>
+        <div class="photo">Product photo${product.stock === 0 ? `<span class="badge">Out of stock</span>` : ""}</div>
         <h3>${product.name}</h3>
         <p class="price">$${product.price}</p>
       </a>
