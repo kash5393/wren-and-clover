@@ -7,9 +7,10 @@ import { useCart } from "@/components/CartProvider";
 
 interface HeaderProps {
   userName: string | null;
+  isOwner: boolean;
 }
 
-export default function Header({ userName }: HeaderProps) {
+export default function Header({ userName, isOwner }: HeaderProps) {
   const { count } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = () => setMenuOpen(false);
@@ -39,6 +40,7 @@ export default function Header({ userName }: HeaderProps) {
           <Link href="/shop" onClick={closeMenu}>Shop</Link>
           <Link href="/about" onClick={closeMenu}>About</Link>
           <Link href="/contact" onClick={closeMenu}>Contact</Link>
+          {isOwner && <Link href="/admin" onClick={closeMenu}>Admin</Link>}
           {userName ? (
             <>
               <Link href="/orders" onClick={closeMenu}>My orders</Link>

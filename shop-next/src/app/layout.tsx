@@ -34,7 +34,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
       </head>
       <body>
         <CartProvider>
-          <Header userName={user ? user.name : null} />
+          <Header userName={user ? user.name : null} isOwner={user?.role === "owner"} />
           <main>{children}</main>
           <Footer />
         </CartProvider>

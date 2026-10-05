@@ -2,6 +2,7 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
 import { cookies } from "next/headers";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { z } from "zod";
 import { pool } from "./db";
@@ -160,4 +161,17 @@ export function safeNextPath(value: unknown): string {
     return value;
   }
   return "/";
+}
+
+export async function requireOwner(): Promise<User> {
+  const user = await getCurrentUser();
+
+  if (!user) {
+    redirect("/login?next=/admin");
+  }
+  if (user.role !== "owner") {
+    notFound();
+  }
+
+  return user;
 }

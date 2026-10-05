@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS contact_messages;
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
 DROP TABLE IF EXISTS sessions;
@@ -43,7 +44,8 @@ CREATE TABLE orders (
   city TEXT NOT NULL,
   state TEXT NOT NULL,
   postcode TEXT NOT NULL,
-  total_cents INTEGER NOT NULL
+  total_cents INTEGER NOT NULL,
+  status TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new', 'shipped'))
 );
 
 CREATE TABLE order_items (
@@ -58,3 +60,11 @@ CREATE TABLE order_items (
 
 CREATE INDEX order_items_order_id_idx ON order_items (order_id);
 CREATE INDEX orders_user_id_idx ON orders (user_id);
+
+CREATE TABLE contact_messages (
+  id SERIAL PRIMARY KEY,
+  name TEXT NOT NULL,
+  email TEXT NOT NULL,
+  message TEXT NOT NULL,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);

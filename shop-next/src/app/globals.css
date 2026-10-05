@@ -691,3 +691,79 @@ a.chip {
   flex-direction: column;
   margin: 0;
 }
+
+/* Admin portal */
+.admin-signed-in {
+  margin: 0 0 var(--space-2);
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.admin-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-bottom: var(--space-3);
+}
+
+.admin-heading .page-title {
+  margin: 0;
+}
+
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.stat-card {
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.stat-label {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 2rem;
+}
+
+.admin-columns {
+  display: grid;
+  gap: var(--space-4);
+}
+
+.row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.row-actions form {
+  margin: 0;
+}
+
+.order-customer {
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .stat-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .admin-columns {
+    grid-template-columns: 1fr 1fr;
+  }
+}
