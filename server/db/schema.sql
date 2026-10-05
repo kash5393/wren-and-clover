@@ -1,5 +1,7 @@
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
+DROP TABLE IF EXISTS sessions;
+DROP TABLE IF EXISTS users;
 DROP TABLE IF EXISTS products;
 
 CREATE TABLE products (
@@ -14,8 +16,24 @@ CREATE TABLE products (
   stock INTEGER NOT NULL DEFAULT 0 CHECK (stock >= 0)
 );
 
+CREATE TABLE users (
+  id SERIAL PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE,
+  name TEXT NOT NULL,
+  password_hash TEXT NOT NULL,
+  role TEXT NOT NULL DEFAULT 'customer' CHECK (role IN ('customer', 'owner')),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE sessions (
+  id TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL
+);
+
 CREATE TABLE orders (
   id SERIAL PRIMARY KEY,
+  user_id INTEGER REFERENCES users (id),
   order_number TEXT GENERATED ALWAYS AS ('WC-' || (1000 + id)) STORED,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
   customer_name TEXT NOT NULL,
@@ -39,3 +57,4 @@ CREATE TABLE order_items (
 );
 
 CREATE INDEX order_items_order_id_idx ON order_items (order_id);
+CREATE INDEX orders_user_id_idx ON orders (user_id);

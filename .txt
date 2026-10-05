@@ -1,0 +1,6 @@
+          email           |   role   |                        password_hash                         
+--------------------------+----------+--------------------------------------------------------------
+ owner@wrenandclover.test | owner    | $2b$12$gIioQ0WhgkNXsOlJ.hDRUe8v.GlBCr.MV5lB25ELKNLeuOXf0zETK
+ ada@example.com          | customer | $2b$12$bsZ0a7nbouoFmdHVQRxvSOqk3f4hst1vPzzxcmEsiPVTRiy.gRJ86
+(2 rows)
+

@@ -1,5 +1,7 @@
+import cookieParser from "cookie-parser";
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
+import { authRouter } from "./auth-routes.js";
 import { createOrder, listOrders } from "./orders.js";
 import {
   createProduct,
@@ -14,6 +16,9 @@ const app = express();
 const port = Number(process.env.PORT) || 4000;
 
 app.use(express.json());
+app.use(cookieParser());
+
+app.use("/api/auth", authRouter);
 
 app.get("/api/health", (_request, response) => {
   response.json({ status: "ok" });
