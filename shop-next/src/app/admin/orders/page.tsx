@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { setOrderStatusAction } from "@/app/admin/actions";
 import { getAllOrders } from "@/lib/admin";
 import { requireOwner } from "@/lib/auth";
@@ -14,16 +15,42 @@ const statusLabels = {
   cancelled: "Cancelled (not paid)",
 };
 
-export default async function AdminOrdersPage() {
+export default async function AdminOrdersPage(props: PageProps<"/admin/orders">) {
   await requireOwner();
-  const orders = await getAllOrders();
+
+  const query = await props.searchParams;
+  const search = typeof query.search === "string" ? query.search.trim() : "";
+  const term = search.toLowerCase();
+
+  const allOrders = await getAllOrders();
+  const orders = term
+    ? allOrders.filter(
+        (order) =>
+          order.orderNumber.toLowerCase().includes(term) ||
+          order.customerName.toLowerCase().includes(term) ||
+          order.email.toLowerCase().includes(term)
+      )
+    : allOrders;
 
   return (
     <>
       <h1 className="page-title">Orders</h1>
 
+      <form className="order-search" action="/admin/orders">
+        <div className="field">
+          <label htmlFor="search">Search by order number, customer name or email</label>
+          <input id="search" name="search" type="search" defaultValue={search} />
+        </div>
+        <button className="button" type="submit">Search</button>
+        {search && <Link href="/admin/orders">Clear</Link>}
+      </form>
+
+      <p className="result-count">
+        {orders.length} of {allOrders.length} {allOrders.length === 1 ? "order" : "orders"}
+      </p>
+
       {orders.length === 0 ? (
-        <p>No orders yet.</p>
+        <p>{search ? "No orders match that search." : "No orders yet."}</p>
       ) : (
         <div className="order-list">
           {orders.map((order) => (

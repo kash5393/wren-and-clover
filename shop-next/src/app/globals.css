@@ -775,3 +775,17 @@ a.chip {
   gap: var(--space-1);
   margin: 0;
 }
+
+/* Order search in the admin portal */
+.order-search {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: var(--space-2);
+  max-width: 720px;
+  margin-bottom: var(--space-2);
+}
+
+.order-search .field {
+  flex: 1 1 260px;
+}
