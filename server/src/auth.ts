@@ -1,6 +1,6 @@
 import { randomBytes } from "node:crypto";
 import bcrypt from "bcryptjs";
-import type { Request, Response } from "express";
+import type { NextFunction, Request, Response } from "express";
 import { z } from "zod";
 import { pool } from "./db.js";
 
@@ -128,4 +128,40 @@ export async function currentUser(request: Request): Promise<User | null> {
   );
 
   return result.rows[0] ?? null;
+}
+
+export async function requireUser(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
+  const user = await currentUser(request);
+
+  if (!user) {
+    response.status(401).json({ error: "Please sign in first" });
+    return;
+  }
+
+  response.locals.user = user;
+  next();
+}
+
+export async function requireOwner(
+  request: Request,
+  response: Response,
+  next: NextFunction
+): Promise<void> {
+  const user = await currentUser(request);
+
+  if (!user) {
+    response.status(401).json({ error: "Please sign in first" });
+    return;
+  }
+  if (user.role !== "owner") {
+    response.status(403).json({ error: "Only the shop owner can do this" });
+    return;
+  }
+
+  response.locals.user = user;
+  next();
 }

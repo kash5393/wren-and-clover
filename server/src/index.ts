@@ -2,7 +2,9 @@ import cookieParser from "cookie-parser";
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { authRouter } from "./auth-routes.js";
-import { createOrder, listOrders } from "./orders.js";
+import { currentUser, requireOwner, requireUser } from "./auth.js";
+import type { User } from "./auth.js";
+import { createOrder, getSavedShipping, listAllOrders, listOrdersForUser } from "./orders.js";
 import {
   createProduct,
   deleteProduct,
@@ -47,7 +49,7 @@ app.get("/api/products/:id", async (request, response) => {
   response.json(product);
 });
 
-app.post("/api/products", async (request, response) => {
+app.post("/api/products", requireOwner, async (request, response) => {
   const result = await createProduct(request.body);
 
   if (!result.ok) {
@@ -58,8 +60,8 @@ app.post("/api/products", async (request, response) => {
   response.status(201).json(result.product);
 });
 
-app.patch("/api/products/:id", async (request, response) => {
-  const result = await updateProduct(request.params.id, request.body);
+app.patch("/api/products/:id", requireOwner, async (request, response) => {
+  const result = await updateProduct(String(request.params.id), request.body);
 
   if (!result.ok) {
     response.status(result.status).json({ error: result.error });
@@ -69,8 +71,8 @@ app.patch("/api/products/:id", async (request, response) => {
   response.json(result.product);
 });
 
-app.delete("/api/products/:id", async (request, response) => {
-  const outcome = await deleteProduct(request.params.id);
+app.delete("/api/products/:id", requireOwner, async (request, response) => {
+  const outcome = await deleteProduct(String(request.params.id));
 
   if (outcome === "not-found") {
     response.status(404).json({ error: "Product not found" });
@@ -91,7 +93,8 @@ app.get("/api/categories", async (_request, response) => {
 });
 
 app.post("/api/orders", async (request, response) => {
-  const result = await createOrder(request.body);
+  const user = await currentUser(request);
+  const result = await createOrder(request.body, user ? user.id : null);
 
   if (!result.ok) {
     response.status(result.status).json({ error: result.error });
@@ -102,8 +105,18 @@ app.post("/api/orders", async (request, response) => {
   response.status(201).json(result.order);
 });
 
-app.get("/api/orders", async (_request, response) => {
-  response.json(await listOrders());
+app.get("/api/account/shipping", requireUser, async (_request, response) => {
+  const user = response.locals.user as User;
+  response.json({ shipping: await getSavedShipping(user.id) });
+});
+
+app.get("/api/orders/mine", requireUser, async (_request, response) => {
+  const user = response.locals.user as User;
+  response.json(await listOrdersForUser(user.id));
+});
+
+app.get("/api/orders", requireOwner, async (_request, response) => {
+  response.json(await listAllOrders());
 });
 
 app.use((_request, response) => {

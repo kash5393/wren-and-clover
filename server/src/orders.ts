@@ -46,7 +46,10 @@ interface StockRow {
   stock: number;
 }
 
-export async function createOrder(body: unknown): Promise<OrderResult> {
+export async function createOrder(
+  body: unknown,
+  userId: number | null
+): Promise<OrderResult> {
   const parsed = orderSchema.safeParse(body);
   if (!parsed.success) {
     return { ok: false, status: 400, error: parsed.error.issues[0]?.message ?? "Invalid order" };
@@ -104,10 +107,11 @@ export async function createOrder(body: unknown): Promise<OrderResult> {
     );
 
     const inserted = await client.query<{ id: number; order_number: string }>(
-      `INSERT INTO orders (customer_name, email, phone, address, city, state, postcode, total_cents)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+      `INSERT INTO orders (user_id, customer_name, email, phone, address, city, state, postcode, total_cents)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
        RETURNING id, order_number`,
       [
+        userId,
         customer.name,
         customer.email,
         customer.phone,
@@ -139,7 +143,7 @@ export async function createOrder(body: unknown): Promise<OrderResult> {
   }
 }
 
-export async function listOrders(): Promise<unknown[]> {
+async function queryOrders(userId: number | null): Promise<unknown[]> {
   const result = await pool.query(
     `SELECT
        o.order_number AS "orderNumber",
@@ -148,6 +152,7 @@ export async function listOrders(): Promise<unknown[]> {
        o.email,
        o.city,
        o.state,
+       o.user_id IS NULL AS "guest",
        o.total_cents / 100.0 AS total,
        json_agg(
          json_build_object(
@@ -160,9 +165,42 @@ export async function listOrders(): Promise<unknown[]> {
        ) AS lines
      FROM orders o
      JOIN order_items i ON i.order_id = o.id
+     WHERE $1::integer IS NULL OR o.user_id = $1
      GROUP BY o.id
-     ORDER BY o.id DESC`
+     ORDER BY o.id DESC`,
+    [userId]
   );
 
   return result.rows.map((row) => ({ ...row, total: Number(row.total) }));
+}
+
+export function listAllOrders(): Promise<unknown[]> {
+  return queryOrders(null);
+}
+
+export function listOrdersForUser(userId: number): Promise<unknown[]> {
+  return queryOrders(userId);
+}
+
+export interface ShippingDetails {
+  name: string;
+  email: string;
+  phone: string;
+  address: string;
+  city: string;
+  state: string;
+  postcode: string;
+}
+
+export async function getSavedShipping(userId: number): Promise<ShippingDetails | null> {
+  const result = await pool.query<ShippingDetails>(
+    `SELECT customer_name AS name, email, phone, address, city, state, postcode
+     FROM orders
+     WHERE user_id = $1
+     ORDER BY id DESC
+     LIMIT 1`,
+    [userId]
+  );
+
+  return result.rows[0] ?? null;
 }

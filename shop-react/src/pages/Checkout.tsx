@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { FormEvent } from "react";
 import { Link } from "react-router";
 import FormField from "../components/FormField";
@@ -82,9 +82,52 @@ function Checkout() {
     email: user?.email ?? "",
   });
   const [errors, setErrors] = useState<CheckoutErrors>({});
+  const [usedSavedDetails, setUsedSavedDetails] = useState(false);
   const [placedOrder, setPlacedOrder] = useState<PlacedOrder | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [serverError, setServerError] = useState("");
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    const account = user;
+    let cancelled = false;
+
+    async function loadSavedDetails() {
+      try {
+        const response = await fetch("/api/account/shipping");
+        if (!response.ok) {
+          return;
+        }
+        const data = (await response.json()) as { shipping: Partial<CheckoutForm> | null };
+        if (cancelled) {
+          return;
+        }
+
+        const saved = data.shipping ?? {};
+        setForm((current) => ({
+          name: current.name || saved.name || account.name,
+          email: current.email || saved.email || account.email,
+          phone: current.phone || saved.phone || "",
+          address: current.address || saved.address || "",
+          city: current.city || saved.city || "",
+          state: current.state || saved.state || "",
+          postcode: current.postcode || saved.postcode || "",
+        }));
+        setUsedSavedDetails(data.shipping !== null);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    loadSavedDetails();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user]);
 
   function updateField(field: keyof CheckoutForm, value: string) {
     setForm((current) => ({ ...current, [field]: value }));
@@ -149,7 +192,7 @@ function Checkout() {
           {!user && (
             <p>
               Want to see your orders in one place next time?{" "}
-              <Link to={`/signup?email=${encodeURIComponent(form.email.trim())}`}>Create an account</Link>. It's optional.
+              <Link to="/signup">Create an account</Link>. It's optional.
             </p>
           )}
           <Link className="button" to="/shop">Back to the shop</Link>
@@ -177,7 +220,10 @@ function Checkout() {
 
         {user ? (
           <p className="checkout-notice">
-            Signed in as <strong>{user.name}</strong> ({user.email}).
+            Signed in as <strong>{user.name}</strong> ({user.email}).{" "}
+            {usedSavedDetails
+              ? "We've filled in the details from your last order. Check them before you place this one."
+              : "Your details will be remembered after your first order."}
           </p>
         ) : (
           <p className="checkout-notice">

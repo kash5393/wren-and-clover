@@ -621,3 +621,50 @@ th {
   border: 1px solid var(--color-border);
   border-radius: var(--radius);
 }
+
+/* My orders */
+.order-list {
+  display: grid;
+  gap: var(--space-3);
+  max-width: 720px;
+}
+
+.order-card {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.order-card-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.order-card-header h2,
+.order-card-header p {
+  margin: 0;
+}
+
+.order-card-header p {
+  color: var(--color-muted);
+}
+
+.order-card ul {
+  display: grid;
+  gap: var(--space-1);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.order-card li {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}

@@ -6,6 +6,7 @@ import Checkout from "./pages/Checkout";
 import Contact from "./pages/Contact";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import MyOrders from "./pages/MyOrders";
 import NotFound from "./pages/NotFound";
 import ProductPage from "./pages/ProductPage";
 import Shipping from "./pages/Shipping";
@@ -24,6 +25,7 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/shipping" element={<Shipping />} />
+        <Route path="/orders" element={<MyOrders />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="*" element={<NotFound />} />

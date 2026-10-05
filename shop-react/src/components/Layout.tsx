@@ -35,6 +35,7 @@ function Layout() {
             <Link to="/shop" onClick={closeMenu}>Shop</Link>
             <Link to="/about" onClick={closeMenu}>About</Link>
             <Link to="/contact" onClick={closeMenu}>Contact</Link>
+            {user && <Link to="/orders" onClick={closeMenu}>My orders</Link>}
             {user ? (
               <button
                 className="nav-button"
