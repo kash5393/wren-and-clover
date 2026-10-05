@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop | Wren &amp; Clover Botanicals</title>
+    <title>Lavender Oat Soap | Wren &amp; Clover Botanicals</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
@@ -25,25 +25,62 @@
 <main>
   <section class="section">
   <div class="container">
-    <h1 class="page-title">Shop</h1>
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="shop.html">Shop</a> / Soaps / Lavender Oat Soap
+    </nav>
 
-    <div class="filters">
-      <button class="chip chip-active" type="button">All</button>
-      <button class="chip" type="button">Soaps</button>
-      <button class="chip" type="button">Lotions</button>
-      <button class="chip" type="button">Bath</button>
-      <button class="chip" type="button">Gift sets</button>
+    <div class="product-layout">
+      <div class="photo product-photo">Large product photo</div>
+
+      <div class="product-details">
+        <h1>Lavender Oat Soap</h1>
+        <p class="product-price">$8</p>
+        <p>Gentle exfoliating bar with ground oats and calming lavender. 4.5 oz.</p>
+
+        <form class="product-form">
+          <div class="field">
+            <label for="scent">Scent</label>
+            <select id="scent" name="scent">
+              <option>Lavender</option>
+              <option>Unscented</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label for="quantity">Quantity</label>
+            <input id="quantity" name="quantity" type="number" min="1" value="1">
+          </div>
+
+          <button class="button button-full" type="button">Add to cart</button>
+        </form>
+      </div>
     </div>
+  </div>
+</section>
 
-    <div class="product-grid product-grid-shop">
-      <article class="product-card">
-        <a href="product.html">
-          <div class="photo">Product photo</div>
-          <h3>Lavender Oat Soap</h3>
-          <p class="price">$8</p>
-        </a>
-      </article>
+<section class="section section-bordered">
+  <div class="container info-grid">
+    <div>
+      <h2>Ingredients</h2>
+      <ul>
+        <li>Organic olive oil</li>
+        <li>Organic coconut oil</li>
+        <li>Shea butter</li>
+        <li>Ground oats</li>
+        <li>Lavender essential oil</li>
+      </ul>
+    </div>
+    <div>
+      <h2>How to use</h2>
+      <p>Lather with warm water and rinse. Keep the bar dry between uses so it lasts longer.</p>
+    </div>
+  </div>
+</section>
 
+<section class="section section-bordered">
+  <div class="container">
+    <h2>You may also like</h2>
+    <div class="product-grid">
       <article class="product-card">
         <a href="product.html">
           <div class="photo">Product photo</div>
@@ -51,29 +88,18 @@
           <p class="price">$8</p>
         </a>
       </article>
-
-      <!-- Add the other nine products here -->
-       <article class="product-card">
-        <a href="product.html">
-          <div class="photo">Product photo</div>
-          <h3>Charcoal Tea Tree Soap</h3>
-          <p class="price">$9</p>
-        </a>
-      </article>
-
-      <article class="product-card">
-        <a href="product.html">
-          <div class="photo">Product photo</div>
-          <h3>Goat Milk Soap</h3>
-          <p class="price">$8</p>
-        </a>
-      </article>
-
       <article class="product-card">
         <a href="product.html">
           <div class="photo">Product photo</div>
           <h3>Shea Hand and Body Lotion</h3>
           <p class="price">$16</p>
+        </a>
+      </article>
+      <article class="product-card">
+        <a href="product.html">
+          <div class="photo">Product photo</div>
+          <h3>Lavender Bath Salts</h3>
+          <p class="price">$14</p>
         </a>
       </article>
     </div>
