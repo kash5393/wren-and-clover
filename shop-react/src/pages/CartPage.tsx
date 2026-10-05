@@ -73,7 +73,8 @@ function CartPage() {
           Order total: <strong>${total}</strong>
         </p>
         <div className="cart-actions">
-          <Link className="button" to="/shop">Continue shopping</Link>
+          <Link className="button" to="/checkout">Checkout</Link>
+          <Link to="/shop">Continue shopping</Link>
         <button className="link-button" type="button" onClick={clearCart}>
           Clear cart
         </button>
