@@ -1,49 +1,20 @@
-import { useEffect, useState } from "react";
-import type { Category, Product } from "../types";
+import { useState } from "react";
+import type { Category } from "../types";
 import ProductCard from "../components/ProductCard";
+import { useProducts } from "../hooks/useProducts";
 
 type CategoryFilter = Category | "All";
 type SortOption = "featured" | "price-low" | "price-high" | "name";
-type Status = "loading" | "ready" | "error";
+
 
 const categories: CategoryFilter[] = ["All", "Soaps", "Lotions", "Bath", "Gift sets"];
 
 function Shop() {
-  const [products, setProducts] = useState<Product[]>([]);
-  const [status, setStatus] = useState<Status>("loading");
+  const { products, status } = useProducts();
   const [activeCategory, setActiveCategory] = useState<CategoryFilter>("All");
   const [search, setSearch] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("featured");
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadProducts() {
-      try {
-        const response = await fetch("/data/products.json");
-        if (!response.ok) {
-          throw new Error(`HTTP ${response.status}`);
-        }
-        const data = (await response.json()) as Product[];
-        if (!cancelled) {
-          setProducts(data);
-          setStatus("ready");
-        }
-      } catch (error) {
-        console.error(error);
-        if (!cancelled) {
-          setStatus("error");
-        }
-      }
-    }
-
-    loadProducts();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
+  
   const term = search.trim().toLowerCase();
 
   const visible = products.filter((product) => {
