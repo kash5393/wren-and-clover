@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { deleteProductAction } from "@/app/admin/actions";
+import { deleteProductAction, restockAction } from "@/app/admin/actions";
 import { requireOwner } from "@/lib/auth";
 import { getProducts } from "@/lib/products";
 
@@ -36,6 +36,7 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
               <th>Category</th>
               <th>Price</th>
               <th>Stock</th>
+              <th>Add stock</th>
               <th>Actions</th>
             </tr>
           </thead>
@@ -46,6 +47,25 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
                 <td>{product.category}</td>
                 <td>${product.price}</td>
                 <td>{product.stock === 0 ? "Out of stock" : product.stock}</td>
+                <td>
+                  <form className="restock-form" action={restockAction}>
+                    <input type="hidden" name="id" value={product.id} />
+                    <input
+                      className="cart-qty"
+                      type="number"
+                      name="amount"
+                      min="1"
+                      max="1000"
+                      step="1"
+                      defaultValue="10"
+                      required
+                      aria-label={`Amount of stock to add to ${product.name}`}
+                    />
+                    <button className="link-button" type="submit">
+                      Add
+                    </button>
+                  </form>
+                </td>
                 <td>
                   <div className="row-actions">
                     <Link href={`/admin/products/${product.id}`}>Edit</Link>

@@ -197,3 +197,7 @@ export async function deleteProduct(id: string): Promise<SaveResult> {
     throw error;
   }
 }
+
+export async function addStock(id: string, amount: number): Promise<void> {
+  await pool.query("UPDATE products SET stock = stock + $1 WHERE id = $2", [amount, id]);
+}

@@ -767,3 +767,11 @@ a.chip {
     grid-template-columns: 1fr 1fr;
   }
 }
+
+/* Restock form in the admin product list */
+.restock-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+}

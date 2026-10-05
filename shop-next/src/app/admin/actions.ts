@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { setOrderStatus } from "@/lib/admin";
 import { requireOwner } from "@/lib/auth";
-import { createProduct, deleteProduct, updateProduct } from "@/lib/products";
+import { addStock, createProduct, deleteProduct, updateProduct } from "@/lib/products";
 
 export interface ProductFormState {
   error: string;
@@ -81,4 +81,17 @@ export async function setOrderStatusAction(formData: FormData): Promise<void> {
   }
 
   revalidatePath("/admin/orders");
+}
+
+export async function restockAction(formData: FormData): Promise<void> {
+  await requireOwner();
+
+  const id = String(formData.get("id") ?? "");
+  const amount = Number(formData.get("amount"));
+
+  if (id !== "" && Number.isInteger(amount) && amount > 0 && amount <= 1000) {
+    await addStock(id, amount);
+  }
+
+  revalidatePath("/admin/products");
 }
