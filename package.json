@@ -1,0 +1,27 @@
+{
+  "name": "wren-and-clover",
+  "version": "1.0.0",
+  "description": "An online shop for a small maker of organic soaps and skincare. Built step by step as a full stack learning project.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc",
+    "watch": "tsc --watch",
+    "check": "tsc --noEmit"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kash5393/wren-and-clover.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kash5393/wren-and-clover/issues"
+  },
+  "homepage": "https://github.com/kash5393/wren-and-clover#readme",
+  "devDependencies": {
+    "typescript": "^7.0.2"
+  }
+}

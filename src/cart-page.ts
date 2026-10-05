@@ -1,16 +1,19 @@
-"use strict";
 const cartEl = document.querySelector("#cart");
+
 function renderCart() {
-    const cart = getCart();
-    if (cart.length === 0) {
-        cartEl.innerHTML = `
+  const cart = getCart();
+
+  if (cart.length === 0) {
+    cartEl.innerHTML = `
       <p>Your cart is empty.</p>
       <a class="button" href="shop.html">Browse the shop</a>
     `;
-        return;
-    }
-    const rows = cart
-        .map((item, index) => `
+    return;
+  }
+
+  const rows = cart
+    .map(
+      (item, index) => `
         <tr>
           <td>
             <a href="product.html?id=${item.id}">${item.name}</a><br>
@@ -26,10 +29,13 @@ function renderCart() {
             <button class="link-button" type="button" data-remove="${index}">Remove</button>
           </td>
         </tr>
-      `)
-        .join("");
-    const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
-    cartEl.innerHTML = `
+      `
+    )
+    .join("");
+
+  const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  cartEl.innerHTML = `
     <div class="table-wrap">
       <table>
         <thead>
@@ -48,24 +54,27 @@ function renderCart() {
     <a class="button" href="shop.html">Continue shopping</a>
   `;
 }
+
 cartEl.addEventListener("change", (event) => {
-    if (!event.target.matches(".cart-qty")) {
-        return;
-    }
-    const cart = getCart();
-    const index = Number(event.target.dataset.index);
-    cart[index].quantity = Math.max(1, Number(event.target.value) || 1);
-    saveCart(cart);
-    renderCart();
+  if (!event.target.matches(".cart-qty")) {
+    return;
+  }
+  const cart = getCart();
+  const index = Number(event.target.dataset.index);
+  cart[index].quantity = Math.max(1, Number(event.target.value) || 1);
+  saveCart(cart);
+  renderCart();
 });
+
 cartEl.addEventListener("click", (event) => {
-    const removeIndex = event.target.dataset.remove;
-    if (removeIndex === undefined) {
-        return;
-    }
-    const cart = getCart();
-    cart.splice(Number(removeIndex), 1);
-    saveCart(cart);
-    renderCart();
+  const removeIndex = event.target.dataset.remove;
+  if (removeIndex === undefined) {
+    return;
+  }
+  const cart = getCart();
+  cart.splice(Number(removeIndex), 1);
+  saveCart(cart);
+  renderCart();
 });
+
 renderCart();
