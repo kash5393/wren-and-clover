@@ -1,7 +1,14 @@
 import express from "express";
 import type { NextFunction, Request, Response } from "express";
 import { createOrder, listOrders } from "./orders.js";
-import { createProduct, deleteProduct, loadProducts, updateProduct } from "./products.js";
+import {
+  createProduct,
+  deleteProduct,
+  getProduct,
+  listCategories,
+  loadProducts,
+  updateProduct,
+} from "./products.js";
 
 const app = express();
 const port = Number(process.env.PORT) || 4000;
@@ -13,31 +20,19 @@ app.get("/api/health", (_request, response) => {
 });
 
 app.get("/api/products", async (request, response) => {
-  let products = await loadProducts();
+  const { category, search, inStock } = request.query;
 
-  const category = request.query.category;
-  if (typeof category === "string") {
-    products = products.filter((product) => product.category === category);
-  }
+  const products = await loadProducts({
+    category: typeof category === "string" ? category : undefined,
+    search: typeof search === "string" ? search.trim() : undefined,
+    inStock: inStock === "true",
+  });
 
-  const search = request.query.search;
-  if (typeof search === "string") {
-    const term = search.trim().toLowerCase();
-    products = products.filter(
-      (product) =>
-        product.name.toLowerCase().includes(term) ||
-        product.description.toLowerCase().includes(term)
-    );
-  }
-    if (request.query.inStock === "true") {
-    products = products.filter((product) => product.stock > 0);
-  }
   response.json(products);
 });
 
 app.get("/api/products/:id", async (request, response) => {
-  const products = await loadProducts();
-  const product = products.find((item) => item.id === request.params.id);
+  const product = await getProduct(request.params.id);
 
   if (!product) {
     response.status(404).json({ error: "Product not found" });
@@ -70,10 +65,16 @@ app.patch("/api/products/:id", async (request, response) => {
 });
 
 app.delete("/api/products/:id", async (request, response) => {
-  const deleted = await deleteProduct(request.params.id);
+  const outcome = await deleteProduct(request.params.id);
 
-  if (!deleted) {
+  if (outcome === "not-found") {
     response.status(404).json({ error: "Product not found" });
+    return;
+  }
+  if (outcome === "in-use") {
+    response
+      .status(409)
+      .json({ error: "This product appears in past orders, so it cannot be deleted" });
     return;
   }
 
@@ -81,9 +82,7 @@ app.delete("/api/products/:id", async (request, response) => {
 });
 
 app.get("/api/categories", async (_request, response) => {
-  const products = await loadProducts();
-  const categories = [...new Set(products.map((product) => product.category))];
-  response.json(categories);
+  response.json(await listCategories());
 });
 
 app.post("/api/orders", async (request, response) => {
@@ -95,14 +94,11 @@ app.post("/api/orders", async (request, response) => {
   }
 
   console.log(`New order ${result.order.orderNumber}: $${result.order.total}`);
-  response.status(201).json({
-    orderNumber: result.order.orderNumber,
-    total: result.order.total,
-  });
+  response.status(201).json(result.order);
 });
 
-app.get("/api/orders", (_request, response) => {
-  response.json(listOrders());
+app.get("/api/orders", async (_request, response) => {
+  response.json(await listOrders());
 });
 
 app.use((_request, response) => {
