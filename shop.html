@@ -1,58 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shop | Wren &amp; Clover Botanicals</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/styles.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Shop | Wren &amp; Clover Botanicals</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Work+Sans:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <header class="site-header">
-  <div class="container header-inner">
-    <a class="logo" href="index.html">Wren &amp; Clover</a>
-    <nav class="site-nav" aria-label="Main">
-      <a href="shop.html">Shop</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-    </nav>
-    <a class="cart-link" href="#">Cart (0)</a>
-  </div>
-</header>
-
-<main>
-  <section class="section">
-  <div class="container">
-    <h1 class="page-title">Shop</h1>
-
-    <div class="filters">
-      <button class="chip chip-active" type="button">All</button>
-      <button class="chip" type="button">Soaps</button>
-      <button class="chip" type="button">Lotions</button>
-      <button class="chip" type="button">Bath</button>
-      <button class="chip" type="button">Gift sets</button>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="logo" href="index.html">Wren &amp; Clover</a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+      <a class="cart-link" href="#">Cart (0)</a>
     </div>
+  </header>
 
-    <div id="product-grid" class="product-grid product-grid-shop">
-    
+  <main>
+    <section class="section">
+      <div class="container">
+        <h1 class="page-title">Shop</h1>
+
+        <div class="shop-controls">
+          <div class="field">
+            <label for="search">Search</label>
+            <input id="search" type="search" placeholder="Search products">
+          </div>
+          <div class="field">
+            <label for="sort">Sort by</label>
+            <select id="sort">
+              <option value="featured">Featured</option>
+              <option value="price-low">Price: low to high</option>
+              <option value="price-high">Price: high to low</option>
+              <option value="name">Name: A to Z</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="filters">
+          <button class="chip chip-active" type="button" data-category="All">All</button>
+          <button class="chip" type="button" data-category="Soaps">Soaps</button>
+          <button class="chip" type="button" data-category="Lotions">Lotions</button>
+          <button class="chip" type="button" data-category="Bath">Bath</button>
+          <button class="chip" type="button" data-category="Gift sets">Gift sets</button>
+        </div>
+
+        <p id="result-count" class="result-count" aria-live="polite"></p>
+
+        <div id="product-grid" class="product-grid product-grid-shop"></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <nav class="footer-nav" aria-label="Footer">
+        <a href="shop.html">Shop</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="shipping.html">Shipping and Returns</a>
+      </nav>
+      <p>&copy; Wren &amp; Clover Botanicals</p>
     </div>
-  </div>
-</section>
-</main>
+  </footer>
 
-<footer class="site-footer">
-  <div class="container">
-    <nav class="footer-nav" aria-label="Footer">
-      <a href="shop.html">Shop</a>
-      <a href="about.html">About</a>
-      <a href="contact.html">Contact</a>
-      <a href="shipping.html">Shipping and Returns</a>
-    </nav>
-    <p>&copy; Wren &amp; Clover Botanicals</p>
-  </div>
-</footer>
-<script src="js/shop.js"></script>
+  <script src="js/shop.js"></script>
 </body>
 </html>

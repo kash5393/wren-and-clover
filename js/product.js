@@ -75,12 +75,10 @@ async function loadProduct() {
     document.title = `${product.name} | Wren & Clover Botanicals`;
     productEl.innerHTML = productDetails(product);
 
-    if (relatedEl) {
-      const related = products
-        .filter((item) => item.category === product.category && item.id !== product.id)
-        .slice(0, 3);
-      relatedEl.innerHTML = related.map(productCard).join("");
-    }
+    const related = products
+      .filter((item) => item.category === product.category && item.id !== product.id)
+      .slice(0, 3);
+    relatedEl.innerHTML = related.map(productCard).join("");
   } catch (error) {
     productEl.innerHTML = "<p>Sorry, this product could not be loaded.</p>";
     console.error(error);
