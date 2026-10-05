@@ -298,6 +298,58 @@ img {
   display: grid;
   gap: var(--space-3);
 }
+
+/* Text pages */
+.prose {
+  max-width: 720px;
+}
+
+.prose h2 {
+  margin-top: var(--space-4);
+}
+
+.prose .photo {
+  min-height: 280px;
+}
+
+/* Contact form */
+.contact-form {
+  display: grid;
+  gap: var(--space-2);
+  margin-top: var(--space-3);
+}
+
+.field textarea {
+  padding: 0.7rem;
+  font: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  resize: vertical;
+}
+
+/* Tables */
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--color-surface);
+}
+
+th,
+td {
+  padding: 0.75rem;
+  text-align: left;
+  border: 1px solid var(--color-border);
+}
+
+th {
+  background: var(--color-border);
+}
 /* Wider screens */
 
 
