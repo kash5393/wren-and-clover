@@ -11,6 +11,7 @@ interface CartContextValue {
   addItem: (product: Product, scent: string, quantity: number) => void;
   updateQuantity: (index: number, quantity: number) => void;
   removeItem: (index: number) => void;
+  clearCart: () => void;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -74,18 +75,23 @@ export function CartProvider({ children }: CartProviderProps) {
     setItems((current) => current.filter((_, itemIndex) => itemIndex !== index));
   }
 
+  function clearCart() {
+    setItems([]);
+  }
+
   const count = items.reduce((sum, item) => sum + item.quantity, 0);
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
     <CartContext.Provider
-      value={{ items, count, total, addItem, updateQuantity, removeItem }}
+      value={{ items, count, total, addItem, updateQuantity, removeItem, clearCart }}
     >
       {children}
     </CartContext.Provider>
   );
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export function useCart() {
   const context = useContext(CartContext);
   if (!context) {

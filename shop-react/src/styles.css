@@ -534,3 +534,10 @@ th {
   font-size: 0.9rem;
   color: var(--color-muted);
 }
+
+.cart-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}

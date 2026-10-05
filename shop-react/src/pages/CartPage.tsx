@@ -2,7 +2,7 @@ import { Link } from "react-router";
 import { useCart } from "../context/CartContext";
 
 function CartPage() {
-  const { items, total, updateQuantity, removeItem } = useCart();
+  const { items, total, updateQuantity, removeItem, clearCart } = useCart();
 
   if (items.length === 0) {
     return (
@@ -72,7 +72,13 @@ function CartPage() {
         <p className="cart-total">
           Order total: <strong>${total}</strong>
         </p>
-        <Link className="button" to="/shop">Continue shopping</Link>
+        <div className="cart-actions">
+          <Link className="button" to="/shop">Continue shopping</Link>
+        <button className="link-button" type="button" onClick={clearCart}>
+          Clear cart
+        </button>
+        </div>
+        
       </div>
     </section>
   );
