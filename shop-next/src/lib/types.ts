@@ -20,6 +20,8 @@ export interface CartItem {
   price: number;
   scent: string;
   quantity: number;
+  /** How many of this product were in stock when it was added. Older carts may not have it. */
+  stock?: number;
 }
 
 export interface User {

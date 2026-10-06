@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCart } from "@/components/CartProvider";
+import { maxForLine } from "@/lib/cart-math";
 
 export default function CartPage() {
   const { items, total, ready, updateQuantity, removeItem, clearCart } = useCart();
@@ -46,7 +47,10 @@ export default function CartPage() {
               </tr>
             </thead>
             <tbody>
-              {items.map((item, index) => (
+              {items.map((item, index) => {
+                const max = maxForLine(items, index);
+
+                return (
                 <tr key={`${item.id}-${item.scent}`}>
                   <td>
                     <Link href={`/products/${item.id}`}>{item.name}</Link>
@@ -59,10 +63,14 @@ export default function CartPage() {
                       className="cart-qty"
                       type="number"
                       min="1"
+                      max={max ?? undefined}
                       value={item.quantity}
                       aria-label={`Quantity for ${item.name}`}
                       onChange={(event) => updateQuantity(index, Number(event.target.value) || 1)}
                     />
+                    {max !== null && item.quantity >= max && (
+                      <span className="stock-note">That&apos;s all we have</span>
+                    )}
                   </td>
                   <td>${item.price * item.quantity}</td>
                   <td>
@@ -71,7 +79,8 @@ export default function CartPage() {
                     </button>
                   </td>
                 </tr>
-              ))}
+                );
+              })}
             </tbody>
           </table>
         </div>

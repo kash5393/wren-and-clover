@@ -942,3 +942,10 @@ code {
   background: #fbe4e2;
   border: 1px solid #e3a09b;
 }
+
+/* Stock messages beside quantity boxes */
+.stock-note {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
