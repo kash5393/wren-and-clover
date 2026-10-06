@@ -12,7 +12,7 @@ export default async function HomePage() {
       <section className="hero">
         <div className="container hero-inner">
           <div>
-            <h1>Small-batch organic soap and skincare</h1>
+            <h1>Small-Batch Organic Soap and Skincare</h1>
             <p>Handmade with simple ingredients you can pronounce.</p>
             <Link className="button" href="/shop">Shop now</Link>
           </div>
