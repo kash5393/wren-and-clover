@@ -42,7 +42,7 @@ export async function requestPasswordReset(emailInput: string): Promise<void> {
     [hashToken(token), user.id, expiresAt]
   );
 
-  const link = `${siteUrl()}/reset-password?token=${token}`;
+  const link = `${await siteUrl()}/reset-password?token=${token}`;
 
   try {
     await sendEmail({

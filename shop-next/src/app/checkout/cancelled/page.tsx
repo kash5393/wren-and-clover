@@ -11,7 +11,7 @@ export default async function CheckoutCancelledPage(props: PageProps<"/checkout/
   const query = await props.searchParams;
   const token = typeof query.token === "string" ? query.token : "";
 
-  if (token && paymentsEnabled()) {
+  if (token && (await paymentsEnabled())) {
     const order = await getReceiptByToken(token);
 
     if (order && order.status === "pending") {

@@ -25,7 +25,7 @@ export default async function CheckoutSuccessPage(props: PageProps<"/checkout/su
   const query = await props.searchParams;
   const sessionId = typeof query.session_id === "string" ? query.session_id : "";
 
-  if (!sessionId || !paymentsEnabled()) {
+  if (!sessionId || !(await paymentsEnabled())) {
     return <Problem message="This page is only shown after a payment." />;
   }
 

@@ -4,8 +4,19 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { setOrderStatus } from "@/lib/admin";
 import { requireOwner } from "@/lib/auth";
+import { sendEmail } from "@/lib/email";
+import { testStripeConnection } from "@/lib/payments";
 import { deleteProductImage, saveProductImage } from "@/lib/product-images";
 import { addStock, createProduct, deleteProduct, updateProduct } from "@/lib/products";
+import {
+  clearSetting,
+  encryptionReady,
+  getSettings,
+  saveSetting,
+  settingKeys,
+  validateSetting,
+} from "@/lib/settings";
+import type { SettingKey } from "@/lib/settings";
 
 export interface ProductFormState {
   error: string;
@@ -123,4 +134,92 @@ export async function restockAction(formData: FormData): Promise<void> {
   }
 
   revalidatePath("/admin/products");
+}
+
+export interface SettingsFormState {
+  error: string;
+  message: string;
+}
+
+export async function saveSettingsAction(
+  _previous: SettingsFormState,
+  formData: FormData
+): Promise<SettingsFormState> {
+  await requireOwner();
+
+  if (!encryptionReady()) {
+    return { error: "Settings can't be saved until SETTINGS_ENCRYPTION_KEY is set.", message: "" };
+  }
+
+  const changes: { key: SettingKey; value: string }[] = [];
+
+  for (const key of settingKeys) {
+    const value = String(formData.get(key) ?? "").trim();
+    if (value === "") {
+      continue;
+    }
+
+    const problem = validateSetting(key, value);
+    if (problem) {
+      return { error: problem, message: "" };
+    }
+    changes.push({ key, value });
+  }
+
+  if (changes.length === 0) {
+    return { error: "", message: "Nothing to save: every box was empty." };
+  }
+
+  for (const change of changes) {
+    await saveSetting(change.key, change.value);
+  }
+
+  revalidatePath("/", "layout");
+  return {
+    error: "",
+    message: `Saved ${changes.length} ${changes.length === 1 ? "setting" : "settings"}.`,
+  };
+}
+
+export async function clearSettingAction(formData: FormData): Promise<void> {
+  await requireOwner();
+
+  const key = String(formData.get("key") ?? "");
+  if ((settingKeys as readonly string[]).includes(key)) {
+    await clearSetting(key as SettingKey);
+  }
+
+  revalidatePath("/", "layout");
+}
+
+export async function testStripeAction(): Promise<SettingsFormState> {
+  await requireOwner();
+
+  const result = await testStripeConnection();
+  return result.ok
+    ? { error: "", message: result.message }
+    : { error: result.message, message: "" };
+}
+
+export async function testEmailAction(): Promise<SettingsFormState> {
+  const owner = await requireOwner();
+  const settings = await getSettings();
+
+  try {
+    await sendEmail({
+      to: owner.email,
+      subject: "Test email from your Wren & Clover shop",
+      text: "If you can read this, your shop's email settings are working.",
+    });
+  } catch (error) {
+    const reason = error instanceof Error ? error.message : "Unknown error";
+    return { error: `The email could not be sent: ${reason}`, message: "" };
+  }
+
+  return settings.smtpUrl
+    ? { error: "", message: `Test email sent to ${owner.email}.` }
+    : {
+        error: "",
+        message: "No email server is set, so the test email was printed in the server log instead.",
+      };
 }

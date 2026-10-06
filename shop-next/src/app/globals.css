@@ -828,3 +828,43 @@ a.chip {
   gap: var(--space-1);
   margin: 0;
 }
+
+/* Admin settings */
+.settings-form {
+  display: grid;
+  gap: var(--space-3);
+}
+
+.settings-section {
+  display: grid;
+  gap: var(--space-2);
+  padding: var(--space-3);
+  margin-top: var(--space-3);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.settings-section h2,
+.settings-section p {
+  margin: 0;
+}
+
+.setting-current {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.setting-current .link-button {
+  padding: 0;
+}
+
+code {
+  padding: 0.1rem 0.3rem;
+  font-size: 0.9em;
+  overflow-wrap: anywhere;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+}

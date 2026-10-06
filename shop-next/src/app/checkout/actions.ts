@@ -26,7 +26,7 @@ export type PlaceOrderResult =
 export async function placeOrder(request: OrderRequest): Promise<PlaceOrderResult> {
   try {
     const user = await getCurrentUser();
-    const takePayment = paymentsEnabled();
+    const takePayment = await paymentsEnabled();
 
     const result = await createOrder(request, user ? user.id : null, takePayment ? "pending" : "new");
     if (!result.ok) {

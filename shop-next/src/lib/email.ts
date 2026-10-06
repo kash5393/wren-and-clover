@@ -1,6 +1,7 @@
 import "server-only";
 import nodemailer from "nodemailer";
 import type { OrderReceipt } from "./orders";
+import { getSettings } from "./settings";
 
 export interface Email {
   to: string;
@@ -9,14 +10,15 @@ export interface Email {
 }
 
 export async function sendEmail(email: Email): Promise<void> {
-  const smtpUrl = process.env.SMTP_URL;
-  const from = process.env.EMAIL_FROM ?? "Wren & Clover <orders@wrenandclover.test>";
+  const settings = await getSettings();
+  const smtpUrl = settings.smtpUrl;
+  const from = settings.emailFrom ?? "Wren & Clover <orders@wrenandclover.test>";
 
   if (!smtpUrl) {
     console.log(
       [
         "",
-        "----- Email preview (not sent: SMTP_URL is not set) -----",
+        "----- Email preview (not sent: no email server is set) -----",
         `From: ${from}`,
         `To: ${email.to}`,
         `Subject: ${email.subject}`,

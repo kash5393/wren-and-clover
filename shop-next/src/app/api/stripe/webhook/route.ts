@@ -1,10 +1,11 @@
 import { sendOrderEmails } from "@/lib/email";
 import { cancelPendingOrder, getReceiptBySession, markOrderPaid } from "@/lib/orders";
 import { getStripe, paymentsEnabled } from "@/lib/payments";
+import { getSettings } from "@/lib/settings";
 
 export async function POST(request: Request): Promise<Response> {
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-  if (!webhookSecret || !paymentsEnabled()) {
+  const webhookSecret = (await getSettings()).stripeWebhookSecret;
+  if (!webhookSecret || !(await paymentsEnabled())) {
     return new Response("Webhook is not configured", { status: 400 });
   }
 
@@ -13,7 +14,7 @@ export async function POST(request: Request): Promise<Response> {
 
   let event;
   try {
-    event = getStripe().webhooks.constructEvent(body, signature, webhookSecret);
+    event = (await getStripe()).webhooks.constructEvent(body, signature, webhookSecret);
   } catch {
     return new Response("Invalid signature", { status: 400 });
   }

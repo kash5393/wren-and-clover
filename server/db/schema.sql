@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS app_settings;
 DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS contact_messages;
@@ -85,5 +86,11 @@ CREATE TABLE product_images (
   product_id TEXT PRIMARY KEY REFERENCES products (id) ON DELETE CASCADE,
   content_type TEXT NOT NULL,
   data BYTEA NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE app_settings (
+  key TEXT PRIMARY KEY,
+  value TEXT NOT NULL,
   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

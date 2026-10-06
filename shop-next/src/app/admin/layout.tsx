@@ -27,6 +27,7 @@ export default async function AdminLayout({ children }: AdminLayoutProps) {
           <Link className="chip" href="/admin/products">Products</Link>
           <Link className="chip" href="/admin/orders">Orders</Link>
           <Link className="chip" href="/admin/messages">Messages</Link>
+          <Link className="chip" href="/admin/settings">Settings</Link>
         </nav>
         {children}
       </div>
