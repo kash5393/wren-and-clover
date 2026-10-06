@@ -17,8 +17,21 @@ export function getStripe(): Stripe {
   return stripeClient;
 }
 
-function siteUrl(): string {
-  return (process.env.SITE_URL ?? "http://localhost:3005").replace(/\/$/, "");
+/** The public address of the site, tidied up so a small typo in the setting can't break payments. */
+export function siteUrl(): string {
+  let url = (process.env.SITE_URL ?? "").trim().replace(/^["']+|["']+$/g, "").trim();
+
+  if (!url && process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+    url = process.env.VERCEL_PROJECT_PRODUCTION_URL;
+  }
+  if (!url) {
+    url = "http://localhost:3005";
+  }
+  if (!/^https?:\/\//i.test(url)) {
+    url = `https://${url}`;
+  }
+
+  return url.replace(/\/+$/, "");
 }
 
 export async function createPaymentPage(
