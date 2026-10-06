@@ -37,7 +37,7 @@ function toUser(row: UserRow): User {
   return { id: row.id, email: row.email, name: row.name, role: row.role };
 }
 
-function tooManyAttempts(key: string): boolean {
+export function tooManyAttempts(key: string): boolean {
   const now = Date.now();
   const entry = attempts.get(key);
 

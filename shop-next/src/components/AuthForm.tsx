@@ -75,9 +75,14 @@ export default function AuthForm({ mode, nextPath, defaultEmail = "" }: AuthForm
           Already have an account? <Link href={`/login${nextQuery}`}>Sign in</Link>
         </p>
       ) : (
-        <p>
-          New here? <Link href={`/signup${nextQuery}`}>Create an account</Link>
-        </p>
+        <>
+          <p>
+            <Link href="/forgot-password">Forgot your password?</Link>
+          </p>
+          <p>
+            New here? <Link href={`/signup${nextQuery}`}>Create an account</Link>
+          </p>
+        </>
       )}
     </>
   );

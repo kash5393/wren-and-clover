@@ -23,6 +23,11 @@ export default async function LoginPage(props: PageProps<"/login">) {
     <section className="section">
       <div className="container prose">
         <h1 className="page-title">Sign in</h1>
+        {first(query.reset) === "done" && (
+          <p className="form-status" role="status">
+            Your password has been changed. Sign in with the new one.
+          </p>
+        )}
         <AuthForm mode="login" nextPath={nextPath} defaultEmail={first(query.email)} />
       </div>
     </section>

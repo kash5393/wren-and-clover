@@ -2,13 +2,13 @@ import "server-only";
 import nodemailer from "nodemailer";
 import type { OrderReceipt } from "./orders";
 
-interface Email {
+export interface Email {
   to: string;
   subject: string;
   text: string;
 }
 
-async function sendEmail(email: Email): Promise<void> {
+export async function sendEmail(email: Email): Promise<void> {
   const smtpUrl = process.env.SMTP_URL;
   const from = process.env.EMAIL_FROM ?? "Wren & Clover <orders@wrenandclover.test>";
 

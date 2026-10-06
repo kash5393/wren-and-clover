@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS contact_messages;
 DROP TABLE IF EXISTS order_items;
 DROP TABLE IF EXISTS orders;
@@ -70,4 +71,11 @@ CREATE TABLE contact_messages (
   email TEXT NOT NULL,
   message TEXT NOT NULL,
   created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE TABLE password_resets (
+  token_hash TEXT PRIMARY KEY,
+  user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
+  expires_at TIMESTAMPTZ NOT NULL,
+  used_at TIMESTAMPTZ
 );
