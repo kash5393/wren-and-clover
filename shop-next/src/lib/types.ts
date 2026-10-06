@@ -11,6 +11,7 @@ export interface Product {
   scents: string[];
   description: string;
   stock: number;
+  imageUrl: string | null;
 }
 
 export interface CartItem {

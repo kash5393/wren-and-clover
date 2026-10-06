@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS product_images;
 DROP TABLE IF EXISTS password_resets;
 DROP TABLE IF EXISTS contact_messages;
 DROP TABLE IF EXISTS order_items;
@@ -78,4 +79,11 @@ CREATE TABLE password_resets (
   user_id INTEGER NOT NULL REFERENCES users (id) ON DELETE CASCADE,
   expires_at TIMESTAMPTZ NOT NULL,
   used_at TIMESTAMPTZ
+);
+
+CREATE TABLE product_images (
+  product_id TEXT PRIMARY KEY REFERENCES products (id) ON DELETE CASCADE,
+  content_type TEXT NOT NULL,
+  data BYTEA NOT NULL,
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );

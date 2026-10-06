@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { setOrderStatus } from "@/lib/admin";
 import { requireOwner } from "@/lib/auth";
+import { deleteProductImage, saveProductImage } from "@/lib/product-images";
 import { addStock, createProduct, deleteProduct, updateProduct } from "@/lib/products";
 
 export interface ProductFormState {
@@ -81,6 +82,34 @@ export async function setOrderStatusAction(formData: FormData): Promise<void> {
   }
 
   revalidatePath("/admin/orders");
+}
+
+export interface ImageFormState {
+  error: string;
+  saved: boolean;
+}
+
+export async function uploadProductImageAction(
+  _previous: ImageFormState,
+  formData: FormData
+): Promise<ImageFormState> {
+  await requireOwner();
+
+  const productId = String(formData.get("productId") ?? "");
+  const result = await saveProductImage(productId, formData.get("photo"));
+  if (!result.ok) {
+    return { error: result.error, saved: false };
+  }
+
+  revalidatePath("/", "layout");
+  return { error: "", saved: true };
+}
+
+export async function removeProductImageAction(formData: FormData): Promise<void> {
+  await requireOwner();
+
+  await deleteProductImage(String(formData.get("productId") ?? ""));
+  revalidatePath("/", "layout");
 }
 
 export async function restockAction(formData: FormData): Promise<void> {

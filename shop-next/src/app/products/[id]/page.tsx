@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import AddToCartForm from "@/components/AddToCartForm";
 import ProductCard from "@/components/ProductCard";
+import ProductPhoto from "@/components/ProductPhoto";
 import { getProduct, getRelatedProducts } from "@/lib/products";
 
 export async function generateMetadata(props: PageProps<"/products/[id]">): Promise<Metadata> {
@@ -42,7 +43,7 @@ export default async function ProductPage(props: PageProps<"/products/[id]">) {
           </nav>
 
           <div className="product-layout">
-            <div className="photo product-photo">Large product photo</div>
+            <ProductPhoto product={product} large />
 
             <div className="product-details">
               <h1>{product.name}</h1>

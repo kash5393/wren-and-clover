@@ -13,6 +13,7 @@ interface ProductRow {
   scents: string[];
   description: string;
   stock: number;
+  image_version: string | null;
 }
 
 export type SortOption = "featured" | "price-low" | "price-high" | "name";
@@ -23,7 +24,10 @@ interface ProductFilters {
   sort?: SortOption;
 }
 
-const productColumns = "id, name, category, price_cents, size, scents, description, stock";
+const productColumns = `id, name, category, price_cents, size, scents, description, stock,
+  (SELECT floor(extract(epoch FROM updated_at))::bigint
+   FROM product_images
+   WHERE product_images.product_id = products.id) AS image_version`;
 
 const sortClauses: Record<SortOption, string> = {
   featured: "position",
@@ -42,6 +46,7 @@ function toProduct(row: ProductRow): Product {
     scents: row.scents,
     description: row.description,
     stock: row.stock,
+    imageUrl: row.image_version ? `/product-images/${row.id}?v=${row.image_version}` : null,
   };
 }
 

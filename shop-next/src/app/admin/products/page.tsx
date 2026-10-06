@@ -35,6 +35,7 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
               <th>Product</th>
               <th>Category</th>
               <th>Price</th>
+              <th>Photo</th>
               <th>Stock</th>
               <th>Add stock</th>
               <th>Actions</th>
@@ -46,6 +47,7 @@ export default async function AdminProductsPage(props: PageProps<"/admin/product
                 <td>{product.name}</td>
                 <td>{product.category}</td>
                 <td>${product.price}</td>
+                <td>{product.imageUrl ? "Yes" : "None"}</td>
                 <td>{product.stock === 0 ? "Out of stock" : product.stock}</td>
                 <td>
                   <form className="restock-form" action={restockAction}>

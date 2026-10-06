@@ -11,6 +11,7 @@ const soap: Product = {
   scents: ["Lavender"],
   description: "Gentle exfoliating bar with ground oats.",
   stock: 24,
+  imageUrl: null,
 };
 
 const lotion: Product = {
@@ -22,6 +23,7 @@ const lotion: Product = {
   scents: ["Lavender", "Unscented"],
   description: "Light daily lotion that absorbs quickly.",
   stock: 15,
+  imageUrl: null,
 };
 
 describe("addToCart", () => {

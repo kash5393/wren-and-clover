@@ -789,3 +789,42 @@ a.chip {
 .order-search .field {
   flex: 1 1 260px;
 }
+
+/* Product photos */
+.photo-frame {
+  position: relative;
+}
+
+.photo-image {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  background: var(--color-border);
+  border-radius: var(--radius);
+}
+
+.image-manager {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+}
+
+.image-manager h2 {
+  margin: 0;
+}
+
+.image-preview {
+  width: 200px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.restock-form {
+  display: flex;
+  align-items: center;
+  gap: var(--space-1);
+  margin: 0;
+}
