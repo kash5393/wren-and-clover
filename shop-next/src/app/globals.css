@@ -949,3 +949,14 @@ code {
   color: var(--color-muted);
   font-size: 0.9rem;
 }
+
+.stock-note {
+  display: block;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.stock-note-limit {
+  color: #8c1d18;
+  font-weight: 600;
+}

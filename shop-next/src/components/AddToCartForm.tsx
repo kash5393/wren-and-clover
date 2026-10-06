@@ -14,6 +14,7 @@ export default function AddToCartForm({ product }: AddToCartFormProps) {
   const [scent, setScent] = useState(product.scents[0] ?? "");
   const [quantity, setQuantity] = useState(1);
   const [justAdded, setJustAdded] = useState(false);
+  const [overLimit, setOverLimit] = useState(false);
 
   const inCart = quantityInCart(items, product.id);
   const available = availableToAdd(items, product);
@@ -21,12 +22,19 @@ export default function AddToCartForm({ product }: AddToCartFormProps) {
   const canAdd = available > 0;
   const chosen = Math.min(quantity, Math.max(1, available));
 
+  function handleQuantityChange(value: string) {
+    const typed = Math.max(1, Math.floor(Number(value)) || 1);
+    setOverLimit(typed > available);
+    setQuantity(Math.min(typed, Math.max(1, available)));
+  }
+
   function handleAdd() {
     if (!canAdd) {
       return;
     }
     addItem(product, scent, chosen);
     setQuantity(1);
+    setOverLimit(false);
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   }
@@ -40,12 +48,13 @@ export default function AddToCartForm({ product }: AddToCartFormProps) {
     buttonText = "All available stock is in your cart";
   }
 
-  let stockNote = "";
-  if (!soldOut) {
-    stockNote = product.stock <= 10 ? `Only ${product.stock} left in stock.` : `${product.stock} in stock.`;
-    if (inCart > 0) {
-      stockNote += ` You have ${inCart} in your cart.`;
-    }
+  // The stock figure is only mentioned when the customer asks for more than there is.
+  let limitNote = "";
+  if (overLimit && canAdd) {
+    limitNote =
+      inCart > 0
+        ? `Sorry, only ${available} more available. You already have ${inCart} in your cart.`
+        : `Sorry, only ${available} available.`;
   }
 
   return (
@@ -65,17 +74,13 @@ export default function AddToCartForm({ product }: AddToCartFormProps) {
           id="quantity"
           type="number"
           min="1"
-          max={Math.max(1, available)}
           value={chosen}
           disabled={!canAdd}
-          aria-describedby="stock-note"
-          onChange={(event) => {
-            const typed = Math.floor(Number(event.target.value)) || 1;
-            setQuantity(Math.min(Math.max(1, typed), Math.max(1, available)));
-          }}
+          aria-describedby="limit-note"
+          onChange={(event) => handleQuantityChange(event.target.value)}
         />
-        <span id="stock-note" className="stock-note" aria-live="polite">
-          {stockNote}
+        <span id="limit-note" className="stock-note stock-note-limit" role="status">
+          {limitNote}
         </span>
       </div>
 
