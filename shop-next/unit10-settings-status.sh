@@ -1,3 +1,9 @@
+#!/usr/bin/env bash
+# Settings page: green status badges and clearer success and error messages.
+# Run from inside the shop-next folder:  bash unit10-settings-status.sh
+set -e
+if [ ! -f src/components/SettingsForm.tsx ]; then echo "Run this inside the shop-next folder, after the settings step."; exit 1; fi
+cat > src/components/SettingsForm.tsx << 'WREN_EOF'
 "use client";
 
 import { useActionState } from "react";
@@ -226,3 +232,83 @@ export default function SettingsForm({ statuses, webhookUrl, canSave }: Settings
     </>
   );
 }
+WREN_EOF
+
+grep -q "status-badge" src/app/globals.css || cat >> src/app/globals.css << 'WREN_EOF'
+
+/* Settings status colours */
+.settings-heading {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-1);
+}
+
+.settings-ready {
+  border-color: #7fbf8e;
+  border-left: 6px solid #2e7d46;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.65rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  border-radius: 999px;
+}
+
+.status-on {
+  color: #17592d;
+  background: #dff3e4;
+  border: 1px solid #7fbf8e;
+}
+
+.status-off {
+  color: #55554c;
+  background: #efede6;
+  border: 1px solid #cfcabb;
+}
+
+.setting-current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-1);
+}
+
+.setting-value {
+  color: var(--color-text);
+  font-family: ui-monospace, monospace;
+  overflow-wrap: anywhere;
+}
+
+.setting-help {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+}
+
+.notice {
+  margin: 0;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  border-radius: var(--radius);
+}
+
+.notice-success {
+  color: #17592d;
+  background: #dff3e4;
+  border: 1px solid #7fbf8e;
+}
+
+.notice-error {
+  color: #8c1d18;
+  background: #fbe4e2;
+  border: 1px solid #e3a09b;
+}
+WREN_EOF
+
+echo "Done. The dev server picks the changes up by itself."
